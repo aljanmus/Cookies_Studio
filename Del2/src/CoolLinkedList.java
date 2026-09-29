@@ -1,4 +1,4 @@
-/**delivery2**/ 
+/**delivery22**/ 
 public class CoolLinkedList {
 
 	private static class Node {

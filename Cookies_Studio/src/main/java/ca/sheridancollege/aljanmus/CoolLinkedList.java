@@ -2,7 +2,7 @@ package ca.sheridancollege.aljanmus;
 
 
 
-/**delivery**/ 
+/**deliveryy**/ 
 public class CoolLinkedList {
 
 	private static class Node {

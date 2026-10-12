@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookieGram | Employee Dashboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #fff5e9;
+            color: #493024;
+        }
+
+        header {
+            background: #8b4513;
+            color: white;
+            padding: 24px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 24px;
+        }
+
+        .welcome, .dashboard-card {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(73, 48, 36, 0.10);
+            margin-bottom: 24px;
+        }
+
+        .dashboard-card h2 {
+            color: #8b4513;
+            margin-top: 0;
+        }
+
+        .logout {
+            color: white;
+            border: 1px solid white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        .logout:hover {
+            background: #69330d;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 12px;
+            background: #fff0d8;
+            border-radius: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: #746258;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CookieGram</h1>
+        <a class="logout" th:href="@{/login?logout}">Log Out</a>
+    </header>
+
+    <main>
+        <section class="welcome">
+            <h2>Employee Dashboard</h2>
+            <p>Welcome to CookieGram!</p>
+            <p>Manage your daily work and keep track of cookie orders.</p>
+        </section>
+
+        <section class="dashboard-card">
+            <h2>Order Management</h2>
+            <p>Use this dashboard to access employee order-management tasks.</p>
+            <span class="status">Employee Portal</span>
+        </section>
+    </main>
+
+    <footer>
+        CookieGram Employee Portal
+    </footer>
+</body>
+</html>
+

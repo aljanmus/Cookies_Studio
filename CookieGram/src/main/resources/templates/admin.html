@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | CookieGram</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f8f5f0;
+            color: #493024;
+        }
+
+        .sidebar {
+            position: fixed;
+            width: 220px;
+            height: 100vh;
+            padding: 30px 20px;
+            background: #493024;
+            color: white;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 45px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+        }
+
+        nav a,
+        nav .planned {
+            display: block;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            color: #eadbce;
+            text-decoration: none;
+        }
+
+        nav a.active {
+            background: #f5d5b5;
+            color: #493024;
+            font-weight: bold;
+        }
+
+        nav .planned small {
+            display: block;
+            margin-top: 6px;
+            font-size: 11px;
+            color: #d1b9a6;
+        }
+
+        .content {
+            margin-left: 220px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 25px 35px;
+            background: white;
+            border-bottom: 1px solid #eadbce;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        header p {
+            margin: 7px 0 0;
+            color: #847165;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            background: #8b4513;
+            color: white;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #69330d;
+        }
+
+        button:focus-visible,
+        a:focus-visible {
+            outline: 3px solid #e9ac68;
+            outline-offset: 3px;
+        }
+
+        main {
+            padding: 30px 35px;
+        }
+
+        .preview {
+            font-size: 13px;
+            color: #847165;
+            margin: 0 0 22px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #eee4da;
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .card h2 {
+            margin: 0 0 20px;
+            font-size: 18px;
+        }
+
+        .charts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .chart-panel {
+            text-align: center;
+        }
+
+        .chart-panel h3 {
+            margin: 0 0 18px;
+            font-size: 16px;
+        }
+
+        .donut {
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            margin: auto;
+            display: grid;
+            place-items: center;
+        }
+
+        .orders {
+            background: conic-gradient(
+                #bd7541 0% 72%,
+                #f3e9df 72% 100%
+            );
+        }
+
+        .revenue {
+            background: conic-gradient(
+                #6f9377 0% 65%,
+                #edf2ed 65% 100%
+            );
+        }
+
+        .donut-center {
+            width: 125px;
+            height: 125px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .donut-center strong {
+            font-size: 29px;
+        }
+
+        .donut-center span {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #847165;
+        }
+
+        .chart-panel p {
+            color: #847165;
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+
+        .lower-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr;
+            gap: 22px;
+            margin-top: 22px;
+        }
+
+        .calendar-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .calendar-controls button {
+            background: transparent;
+            color: #493024;
+            font-size: 22px;
+            padding: 4px 12px;
+        }
+
+        .calendar-controls strong {
+            font-size: 14px;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 5px;
+            text-align: center;
+        }
+
+        .calendar span {
+            display: grid;
+            place-items: center;
+            min-height: 36px;
+            font-size: 13px;
+        }
+
+        .calendar .weekday {
+            color: #847165;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .calendar .calendar-day {
+            position: relative;
+            padding: 0;
+            min-height: 36px;
+            background: transparent;
+            color: #493024;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            box-shadow: none;
+            font-size: 14px;
+        }
+
+        .calendar .calendar-day:hover {
+            border-color: #c9b6a8;
+        }
+
+        .calendar .calendar-day.today {
+            outline: 2px solid #8b4513;
+            outline-offset: -2px;
+            font-weight: bold;
+        }
+
+        .calendar .calendar-day.has-note {
+            font-weight: bold;
+        }
+
+        .calendar .calendar-day.has-note::after {
+            content: "";
+            position: absolute;
+            bottom: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .calendar .calendar-day.light-green {
+            color: #54823b;
+        }
+
+        .calendar .calendar-day.yellow {
+            color: #9b7400;
+        }
+
+        .calendar .calendar-day.green {
+            color: #176b38;
+        }
+
+        .calendar .calendar-day.red {
+            color: #c62828;
+        }
+
+        .calendar-help {
+            font-size: 12px;
+            color: #847165;
+            margin: 18px 0 0;
+            line-height: 1.5;
+        }
+
+        .employee,
+        .review {
+            padding: 16px 0;
+            border-bottom: 1px solid #f0e7de;
+        }
+
+        .employee:last-child,
+        .review:last-child {
+            border-bottom: none;
+        }
+
+        .employee {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #fff1e3;
+            display: grid;
+            place-items: center;
+            color: #8b4513;
+        }
+
+        .employee strong,
+        .review strong {
+            font-size: 14px;
+        }
+
+        .employee p {
+            font-size: 12px;
+            color: #847165;
+            margin: 6px 0 0;
+        }
+
+        .empty {
+            padding: 26px 12px;
+            text-align: center;
+            color: #847165;
+            background: #faf8f5;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .stars {
+            margin: 8px 0;
+            color: #a96b15;
+        }
+
+        .review p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #847165;
+            overflow-wrap: anywhere;
+            margin: 8px 0 0;
+        }
+
+        .note-dialog {
+            width: min(550px, 92vw);
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid #eadbce;
+            border-radius: 16px;
+            padding: 28px;
+            background: white;
+            color: #493024;
+            box-shadow: none;
+        }
+
+        .note-dialog::backdrop {
+            background: rgba(0, 0, 0, .35);
+        }
+
+        .note-dialog h2 {
+            margin: 0 0 22px;
+            font-size: 21px;
+        }
+
+        .note-dialog label {
+            display: block;
+            margin: 16px 0 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .note-dialog textarea,
+        .note-dialog select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #c9b6a8;
+            border-radius: 8px;
+            background: white;
+            color: #493024;
+            font: inherit;
+        }
+
+        .note-dialog textarea {
+            min-height: 240px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .note-dialog textarea:focus,
+        .note-dialog select:focus {
+            outline: 2px solid #8b4513;
+            outline-offset: 2px;
+        }
+
+        .note-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .note-actions .secondary {
+            background: #eee4da;
+            color: #493024;
+        }
+
+        .note-actions .delete {
+            background: #a73333;
+        }
+
+        .note-error {
+            color: #a73333;
+            font-size: 13px;
+        }
+
+        @media (max-width: 1150px) {
+            .lower-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .reviews-card {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                padding: 18px;
+            }
+
+            .logo {
+                margin-bottom: 18px;
+            }
+
+            nav {
+                display: flex;
+                gap: 8px;
+                overflow-x: auto;
+            }
+
+            nav a,
+            nav .planned {
+                flex-shrink: 0;
+                margin-bottom: 0;
+                padding: 10px;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            header,
+            main {
+                padding: 22px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .charts,
+            .lower-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reviews-card {
+                grid-column: auto;
+            }
+
+            header h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">
+            <span class="logo-icon" aria-hidden="true">🍪</span>
+            <span>CookieGram</span>
+        </div>
+
+        <nav aria-label="Admin navigation">
+            <a th:href="@{/admin}" class="active" aria-current="page">
+                Dashboard
+            </a>
+            <span class="planned">Orders <small>Coming soon</small></span>
+            <span class="planned">Cookies <small>Coming soon</small></span>
+            <span class="planned">Employees <small>Coming soon</small></span>
+            <span class="planned">Promotions <small>Coming soon</small></span>
+            <span class="planned">Settings <small>Coming soon</small></span>
+        </nav>
+    </aside>
+
+    <div class="content">
+        <header>
+            <div>
+                <h1>Dashboard</h1>
+                <p>Welcome back, Admin.</p>
+            </div>
+
+            <form th:action="@{/logout}" method="post">
+                <button type="submit">Log Out</button>
+            </form>
+        </header>
+
+        <main>
+            
+
+            <section class="card">
+                <h2>Monthly Targets</h2>
+
+                <div class="charts">
+                    <div class="chart-panel">
+                        <h3>Order Target</h3>
+                        <div class="donut orders" role="img"
+                             aria-label="Demo order target: 72 out of 100 orders">
+                            <div class="donut-center">
+                                <strong>72%</strong>
+                                <span>Target reached</span>
+                            </div>
+                        </div>
+                        <p><strong>72</strong> / 100 orders</p>
+                    </div>
+
+                    <div class="chart-panel">
+                        <h3>Revenue Target</h3>
+                        <div class="donut revenue" role="img"
+                             aria-label="Demo revenue target: 3250 dollars out of 5000 dollars">
+                            <div class="donut-center">
+                                <strong>65%</strong>
+                                <span>Target reached</span>
+                            </div>
+                        </div>
+                        <p><strong>$3,250</strong> / $5,000</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="lower-grid">
+                <section class="card">
+                    <h2>Calendar</h2>
+
+                    <div class="calendar-controls">
+                        <button type="button" id="previousMonth"
+                                aria-label="Previous month">‹</button>
+                        <strong id="calendarTitle" aria-live="polite"></strong>
+                        <button type="button" id="nextMonth"
+                                aria-label="Next month">›</button>
+                    </div>
+
+                    <div class="calendar" id="calendar"></div>
+
+                </section>
+
+                <section class="card">
+                    <h2>Employees</h2>
+
+                    <div th:if="${employees == null or #lists.isEmpty(employees)}"
+                         class="empty">
+                        No employees yet.
+                    </div>
+
+                    <th:block th:if="${employees != null}">
+                        <div class="employee"
+                             th:each="employee, status : ${employees}"
+                             th:if="${status.index < 2}">
+                            <div class="avatar" aria-hidden="true">👤</div>
+                            <div>
+                                <strong th:text="${employee.name}">Employee name</strong>
+                                <p th:text="${employee.role}">Employee role</p>
+                            </div>
+                        </div>
+                    </th:block>
+                </section>
+
+                <section class="card reviews-card">
+                    <h2>Recent Reviews</h2>
+
+                    <div th:if="${reviews == null or #lists.isEmpty(reviews)}"
+                         class="empty">
+                        No reviews yet.
+                    </div>
+
+                    <th:block th:if="${reviews != null}">
+                        <article class="review"
+                                 th:each="review, status : ${reviews}"
+                                 th:if="${status.index < 3}">
+                            <strong th:text="${review.customerName}">
+                                Customer name
+                            </strong>
+                            <div class="stars"
+                                 th:text="${review.rating + ' / 5'}">
+                                5 / 5
+                            </div>
+                            <p th:text="${review.comment}">Review comment</p>
+                        </article>
+                    </th:block>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <dialog id="noteDialog" class="note-dialog" aria-labelledby="noteTitle">
+        <form id="noteForm">
+            <h2 id="noteTitle">Day note</h2>
+
+            <label for="dayNote">Note</label>
+            <textarea id="dayNote" maxlength="1000"
+                      placeholder="Write your note here..." required></textarea>
+
+            <label for="noteColor">Day colour</label>
+            <select id="noteColor">
+                <option value="light-green">Light green</option>
+                <option value="yellow">Yellow</option>
+                <option value="green">Green</option>
+                <option value="red">Red</option>
+            </select>
+
+            <p id="noteError" class="note-error" role="alert" hidden></p>
+
+            <div class="note-actions">
+                <button type="button" id="deleteNote" class="delete">Delete</button>
+                <button type="button" id="cancelNote" class="secondary">Cancel</button>
+                <button type="submit">Save</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+        const today = new Date();
+        let displayedMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        let selectedDate = "";
+
+        const storageKey = "cookiegram-admin-calendar-notes";
+        const allowedColors = ["light-green", "yellow", "green", "red"];
+        let notes = {};
+
+        try {
+            const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+
+            if (saved && typeof saved === "object" && !Array.isArray(saved)) {
+                for (const [key, note] of Object.entries(saved)) {
+                    if (/^\d{4}-\d{2}-\d{2}$/.test(key) &&
+                        note && typeof note.text === "string") {
+                        notes[key] = {
+                            text: note.text,
+                            color: allowedColors.includes(note.color)
+                                ? note.color
+                                : "light-green"
+                        };
+                    }
+                }
+            }
+        } catch {
+            notes = {};
+        }
+
+        const dialog = document.getElementById("noteDialog");
+        const noteInput = document.getElementById("dayNote");
+        const colorInput = document.getElementById("noteColor");
+        const errorMessage = document.getElementById("noteError");
+
+        function dateKey(year, month, day) {
+            return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        }
+
+        function openNote(key, date) {
+            selectedDate = key;
+            const existing = notes[key];
+
+            document.getElementById("noteTitle").textContent =
+                date.toLocaleDateString("en-CA", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric"
+                });
+
+            noteInput.value = existing?.text || "";
+            colorInput.value = existing?.color || "light-green";
+            document.getElementById("deleteNote").hidden = !existing;
+            errorMessage.hidden = true;
+
+            dialog.showModal();
+            noteInput.focus();
+        }
+
+        function persistNotes(updatedNotes) {
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(updatedNotes));
+                notes = updatedNotes;
+                dialog.close();
+                renderCalendar();
+            } catch {
+                errorMessage.textContent =
+                    "Could not save your note. Please check browser storage settings.";
+                errorMessage.hidden = false;
+            }
+        }
+
+        function renderCalendar() {
+            const calendar = document.getElementById("calendar");
+            const year = displayedMonth.getFullYear();
+            const month = displayedMonth.getMonth();
+
+            document.getElementById("calendarTitle").textContent =
+                displayedMonth.toLocaleDateString("en-CA", {
+                    month: "long",
+                    year: "numeric"
+                });
+
+            calendar.replaceChildren();
+
+            ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach(day => {
+                const label = document.createElement("span");
+                label.className = "weekday";
+                label.textContent = day;
+                calendar.appendChild(label);
+            });
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) {
+                const blank = document.createElement("span");
+                blank.setAttribute("aria-hidden", "true");
+                calendar.appendChild(blank);
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const date = new Date(year, month, day);
+                const key = dateKey(year, month, day);
+                const note = notes[key];
+
+                const cell = document.createElement("button");
+                cell.type = "button";
+                cell.className = "calendar-day";
+                cell.textContent = day;
+
+                const dateLabel = date.toLocaleDateString("en-CA", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric"
+                });
+
+                cell.setAttribute("aria-label",
+                    `${dateLabel}${note ? ", has a " + note.color + " note" : ", add a note"}`);
+
+                if (note) {
+                    cell.classList.add("has-note", note.color);
+                    cell.title = note.text;
+                }
+
+                if (day === today.getDate() &&
+                    month === today.getMonth() &&
+                    year === today.getFullYear()) {
+                    cell.classList.add("today");
+                    cell.setAttribute("aria-current", "date");
+                }
+
+                cell.addEventListener("click", () => openNote(key, date));
+                calendar.appendChild(cell);
+            }
+        }
+
+        document.getElementById("noteForm").addEventListener("submit", event => {
+            event.preventDefault();
+
+            const text = noteInput.value.trim();
+
+            if (!text) {
+                errorMessage.textContent = "Please enter a note.";
+                errorMessage.hidden = false;
+                noteInput.focus();
+                return;
+            }
+
+            persistNotes({
+                ...notes,
+                [selectedDate]: {
+                    text: text,
+                    color: colorInput.value
+                }
+            });
+        });
+
+        document.getElementById("deleteNote").addEventListener("click", () => {
+            const updatedNotes = { ...notes };
+            delete updatedNotes[selectedDate];
+            persistNotes(updatedNotes);
+        });
+
+        document.getElementById("cancelNote").addEventListener("click", () => {
+            dialog.close();
+        });
+
+        document.getElementById("previousMonth").addEventListener("click", () => {
+            displayedMonth.setMonth(displayedMonth.getMonth() - 1);
+            renderCalendar();
+        });
+
+        document.getElementById("nextMonth").addEventListener("click", () => {
+            displayedMonth.setMonth(displayedMonth.getMonth() + 1);
+            renderCalendar();
+        });
+
+        renderCalendar();
+    </script>
+</body>
+</html>

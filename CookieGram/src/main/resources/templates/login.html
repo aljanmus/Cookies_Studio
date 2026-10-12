@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookieGram | Login</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            font-family: Arial, sans-serif;
+            background: #fff5e9;
+            color: #493024;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 12px 35px rgba(73, 48, 36, 0.12);
+        }
+
+        h1 {
+            margin: 0;
+            text-align: center;
+            color: #8b4513;
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #746258;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 20px;
+            border: 1px solid #c9b6a8;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: 2px solid #8b4513;
+            outline-offset: 2px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #8b4513;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #69330d;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .error {
+            background: #fde8e8;
+            color: #9b1c1c;
+        }
+
+        .success {
+            background: #e8f5e9;
+            color: #256029;
+        }
+
+        .home-link {
+            display: block;
+            margin-top: 24px;
+            text-align: center;
+            color: #8b4513;
+        }
+    </style>
+</head>
+<body>
+    <main class="login-card">
+        <h1>CookieGram</h1>
+        <p class="subtitle">Welcome back! Log in to your account.</p>
+
+        <div th:if="${param.error}" class="message error" role="alert">
+            Incorrect username or password.
+        </div>
+
+        <div th:if="${param.logout}" class="message success" role="status">
+            You have been logged out successfully.
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username"
+                   autocomplete="username" required autofocus>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password"
+                   autocomplete="current-password" required>
+
+            <button type="submit">Log In</button>
+        </form>
+
+        <a th:href="@{/}" class="home-link">Back to home</a>
+    </main>
+</body>
+</html>

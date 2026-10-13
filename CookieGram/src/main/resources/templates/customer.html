@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CookieGram | Customer</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #fff5e9; color: #493024; }
+        header { background: #8b4513; color: white; padding: 24px 7%; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { margin: 0; }
+        header button { background: white; color: #8b4513; padding: 10px 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        main { max-width: 900px; margin: 40px auto; padding: 0 24px; }
+        h2 { color: #8b4513; }
+        .card { background: white; padding: 20px; margin-bottom: 16px; border-radius: 12px; box-shadow: 0 6px 18px rgba(73, 48, 36, 0.10); }
+        footer { text-align: center; padding: 24px; color: #746258; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CookieGram</h1>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Log Out</button>
+        </form>
+    </header>
+
+    <main>
+        <h2>Welcome, Customer!</h2>
+        <h2>Current Promotions</h2>
+        <div class="card" th:each="promo : ${promotions}" th:text="${promo}">Promotion</div>
+    </main>
+
+    <footer>&copy; 2026 CookieGram</footer>
+</body>
+</html>

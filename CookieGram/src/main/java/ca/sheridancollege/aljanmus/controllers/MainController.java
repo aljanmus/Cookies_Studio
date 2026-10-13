@@ -2,6 +2,7 @@ package ca.sheridancollege.aljanmus.controllers;
 import java.util.List;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -22,13 +23,12 @@ public class MainController {
     @GetMapping("/customer")
     public String customer(Model model) {
         model.addAttribute("promotions", List.of(
-            "20% off Chocolate Chip Cookies",
-            "Buy 12 cookies, get 2 free",
-            "Free delivery on orders over $30"
+            Map.of("title", "20% off Chocolate Chip Cookies", "image", "chocolate.jpeg"),
+            Map.of("title", "Buy 12 cookies, get 2 free",     "image", "dozen.jpeg"),
+            Map.of("title", "Free delivery on orders over $30", "image", "delivery.jpeg")
         ));
         return "customer";
     }
-    
     @GetMapping("/employee")
     public String employee() {
         return "employee";

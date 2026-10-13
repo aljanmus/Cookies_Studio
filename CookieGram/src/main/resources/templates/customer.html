@@ -10,7 +10,10 @@
         header button { background: white; color: #8b4513; padding: 10px 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
         main { max-width: 900px; margin: 40px auto; padding: 0 24px; }
         h2 { color: #8b4513; }
-        .card { background: white; padding: 20px; margin-bottom: 16px; border-radius: 12px; box-shadow: 0 6px 18px rgba(73, 48, 36, 0.10); }
+        .promotions { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 18px rgba(73, 48, 36, 0.10); }
+        .card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+        .card h3 { margin: 0; padding: 16px; color: #8b4513; font-size: 18px; }
         footer { text-align: center; padding: 24px; color: #746258; }
     </style>
 </head>
@@ -24,8 +27,17 @@
 
     <main>
         <h2>Welcome, Customer!</h2>
-        <h2>Current Promotions</h2>
-        <div class="card" th:each="promo : ${promotions}" th:text="${promo}">Promotion</div>
+
+        <section>
+            <h2>Current Promotions</h2>
+            <!-- One card is created for each promotion sent by the server -->
+            <div class="promotions">
+                <div class="card" th:each="promo : ${promotions}">
+                    <img th:src="@{'/images/' + ${promo.image}}" th:alt="${promo.title}">
+                    <h3 th:text="${promo.title}">Promotion</h3>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>&copy; 2026 CookieGram</footer>

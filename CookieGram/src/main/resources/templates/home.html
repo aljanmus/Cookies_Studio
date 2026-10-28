@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CookieGram | Home</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fff5e9;
+            color: #493024;
+        }
+
+        /* Header */
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 7%;
+            background: #8b4513;
+            color: white;
+        }
+
+        .logo {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .header-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .contact-link {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .contact-link:hover {
+            text-decoration: underline;
+        }
+
+        .login-button {
+            display: inline-block;
+            padding: 11px 20px;
+            border-radius: 8px;
+            background: white;
+            color: #8b4513;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .login-button:hover {
+            background: #f5e5d5;
+        }
+
+        /* Main content */
+
+        main {
+            max-width: 1200px;
+            margin: 40px auto 70px;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .welcome h2 {
+            margin-bottom: 10px;
+            color: #8b4513;
+            font-size: 36px;
+        }
+
+        .welcome p {
+            color: #746258;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        /* Promotions */
+
+        .promotions {
+            margin-top: 45px;
+        }
+
+        .promotions h2 {
+            margin-bottom: 24px;
+            color: #8b4513;
+            font-size: 28px;
+        }
+
+        .promotion-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .promotion-card {
+            display: none;
+            overflow: hidden;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(73, 48, 36, 0.15);
+        }
+
+        .promotion-card.active {
+            display: block;
+        }
+
+        .promotion-card img {
+            display: block;
+            width: 100%;
+            height: 480px;
+            object-fit: cover;
+        }
+
+        .promotion-card h3 {
+            margin: 0;
+            padding: 25px;
+            color: #8b4513;
+            font-size: 23px;
+        }
+
+        .promotion-message {
+            color: #746258;
+        }
+
+        /* Footer */
+
+        footer {
+            background: #493024;
+            color: #f8eee6;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 45px 30px;
+        }
+
+        .footer-section h3 {
+            margin-top: 0;
+            color: white;
+            font-size: 18px;
+        }
+
+        .footer-section p {
+            color: #eadbce;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .footer-section a {
+            display: block;
+            width: fit-content;
+            margin-bottom: 12px;
+            color: #eadbce;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .footer-section a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .footer-bottom {
+            padding: 20px;
+            border-top: 1px solid #74584a;
+            text-align: center;
+            color: #eadbce;
+            font-size: 14px;
+        }
+
+        /* Small screens */
+
+        @media (max-width: 700px) {
+            header {
+                padding: 18px 20px;
+            }
+
+            .logo {
+                font-size: 23px;
+            }
+
+            .header-links {
+                gap: 12px;
+            }
+
+            .welcome h2 {
+                font-size: 27px;
+            }
+
+            .promotion-card img {
+                height: 300px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .contact-link {
+                font-size: 14px;
+            }
+
+            .login-button {
+                padding: 10px 14px;
+            }
+
+            .promotion-card img {
+                height: 230px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+
+        <h1 class="logo">🍪 CookieGram</h1>
+
+        <div class="header-links">
+
+            <!-- Opens the Contact Us page -->
+            <a th:href="@{/contact}" class="contact-link">
+                Contact Us
+            </a>
+
+            <!-- Opens the login page -->
+            <a th:href="@{/login}" class="login-button">
+                Log In
+            </a>
+
+        </div>
+
+    </header>
+
+    <main>
+
+        <!-- Welcome section -->
+        <section class="welcome">
+
+            <h2>Welcome to CookieGram!</h2>
+
+            <p>
+                Discover our cookies and check out our latest promotions.
+            </p>
+
+        </section>
+
+        <!-- Promotions section -->
+        <section class="promotions" id="promotions">
+
+            <h2>Current Promotions</h2>
+
+            <div class="promotion-container">
+
+                <!-- Display this message when no promotions exist -->
+                <p
+                    class="promotion-message"
+                    th:if="${promotions == null or #lists.isEmpty(promotions)}">
+
+                    No promotions available right now.
+
+                </p>
+
+                <!-- Show one card for each promotion -->
+                <div
+                    class="promotion-card"
+                    th:each="promo, status : ${promotions}"
+                    th:classappend="${status.first} ? ' active' : ''">
+
+                    <img
+                        th:src="@{'/images/' + ${promo.image}}"
+                        th:alt="${promo.title}"
+                    >
+
+                    <h3 th:text="${promo.title}">
+                        Promotion title
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+   <!-- Footer -->
+<footer>
+
+    <div class="footer-content">
+
+        <!-- About -->
+        <div class="footer-section">
+
+            <h3>🍪 CookieGram</h3>
+
+            <p>
+                Welcome to CookieGram! Explore our cookies and discover
+                our latest promotions.
+            </p>
+
+        </div>
+
+        <!-- Quick links -->
+        <div class="footer-section">
+
+            <h3>Quick Links</h3>
+
+            <a th:href="@{/}">
+                Home
+            </a>
+
+            <a href="#promotions">
+                Promotions
+            </a>
+
+            <a th:href="@{/login}">
+                Log In
+            </a>
+
+        </div>
+
+        <!-- Contact information -->
+        <div class="footer-section">
+
+            <h3>Contact Us</h3>
+
+           
+
+            <a th:href="@{/contact}">
+               Have a question? Press here
+            </a>
+
+            <p>Email:</p>
+
+            <a href="mailto:customerService@CookieGram.ca">
+                customerService@CookieGram.ca
+            </a>
+
+            <p>Phone: 647-000-999</p>
+
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        &copy; 2026 CookieGram. All rights reserved.
+    </div>
+
+</footer>
+
+    <script>
+        // Get all promotion cards
+        const promotions = document.querySelectorAll(".promotion-card");
+
+        let currentPromotion = 0;
+
+        // Change the promotion every 5 seconds
+        if (promotions.length > 1) {
+
+            setInterval(() => {
+
+                // Hide the current promotion
+                promotions[currentPromotion].classList.remove("active");
+
+                // Select the next promotion
+                currentPromotion =
+                    (currentPromotion + 1) % promotions.length;
+
+                // Display the next promotion
+                promotions[currentPromotion].classList.add("active");
+
+            }, 5000);
+        }
+    </script>
+
+</body>
+</html>

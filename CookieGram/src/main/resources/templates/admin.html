@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Admin Dashboard | CookieGram</title>
+
     <style>
         * {
             box-sizing: border-box;
@@ -15,6 +22,8 @@
             background: #f8f5f0;
             color: #493024;
         }
+
+        /* Sidebar */
 
         .sidebar {
             position: fixed;
@@ -48,6 +57,10 @@
             text-decoration: none;
         }
 
+        nav a:hover {
+            background: #694737;
+        }
+
         nav a.active {
             background: #f5d5b5;
             color: #493024;
@@ -60,6 +73,8 @@
             font-size: 11px;
             color: #d1b9a6;
         }
+
+        /* Main page */
 
         .content {
             margin-left: 220px;
@@ -86,6 +101,10 @@
             font-size: 14px;
         }
 
+        main {
+            padding: 30px 35px;
+        }
+
         button {
             padding: 10px 16px;
             border: none;
@@ -106,15 +125,16 @@
             outline-offset: 3px;
         }
 
-        main {
-            padding: 30px 35px;
+        .success-message {
+            padding: 14px 18px;
+            margin: 0 0 20px;
+            background: #e8f5e9;
+            color: #256029;
+            border-radius: 8px;
+            font-weight: bold;
         }
 
-        .preview {
-            font-size: 13px;
-            color: #847165;
-            margin: 0 0 22px;
-        }
+        /* Cards */
 
         .card {
             background: white;
@@ -127,6 +147,8 @@
             margin: 0 0 20px;
             font-size: 18px;
         }
+
+        /* Monthly targets */
 
         .charts {
             display: grid;
@@ -192,12 +214,16 @@
             margin-bottom: 0;
         }
 
+        /* Lower dashboard cards */
+
         .lower-grid {
             display: grid;
             grid-template-columns: 1.2fr 1fr 1fr;
             gap: 22px;
             margin-top: 22px;
         }
+
+        /* Calendar */
 
         .calendar-controls {
             display: flex;
@@ -246,7 +272,6 @@
             color: #493024;
             border: 1px solid transparent;
             border-radius: 8px;
-            box-shadow: none;
             font-size: 14px;
         }
 
@@ -292,12 +317,7 @@
             color: #c62828;
         }
 
-        .calendar-help {
-            font-size: 12px;
-            color: #847165;
-            margin: 18px 0 0;
-            line-height: 1.5;
-        }
+        /* Employees and reviews */
 
         .employee,
         .review {
@@ -360,6 +380,8 @@
             margin: 8px 0 0;
         }
 
+        /* Calendar note window */
+
         .note-dialog {
             width: min(550px, 92vw);
             max-height: 90vh;
@@ -369,11 +391,10 @@
             padding: 28px;
             background: white;
             color: #493024;
-            box-shadow: none;
         }
 
         .note-dialog::backdrop {
-            background: rgba(0, 0, 0, .35);
+            background: rgba(0, 0, 0, 0.35);
         }
 
         .note-dialog h2 {
@@ -432,6 +453,8 @@
             color: #a73333;
             font-size: 13px;
         }
+
+        /* Responsive design */
 
         @media (max-width: 1150px) {
             .lower-grid {
@@ -494,27 +517,60 @@
         }
     </style>
 </head>
+
 <body>
+
+    <!-- Sidebar -->
     <aside class="sidebar">
+
         <div class="logo">
             <span class="logo-icon" aria-hidden="true">🍪</span>
             <span>CookieGram</span>
         </div>
 
         <nav aria-label="Admin navigation">
-            <a th:href="@{/admin}" class="active" aria-current="page">
+
+            <a
+                th:href="@{/admin}"
+                class="active"
+                aria-current="page">
                 Dashboard
             </a>
-            <span class="planned">Orders <small>Coming soon</small></span>
-            <span class="planned">Cookies <small>Coming soon</small></span>
-            <span class="planned">Employees <small>Coming soon</small></span>
-            <span class="planned">Promotions <small>Coming soon</small></span>
-            <span class="planned">Settings <small>Coming soon</small></span>
+
+            <span class="planned">
+                Orders
+                <small>Coming soon</small>
+            </span>
+
+            <span class="planned">
+                Cookies
+                <small>Coming soon</small>
+            </span>
+
+            <!-- Opens the add employee page -->
+            <a th:href="@{/admin/add-employee}">
+                Add Employee
+            </a>
+
+            <span class="planned">
+                Promotions
+                <small>Coming soon</small>
+            </span>
+
+            <span class="planned">
+                Settings
+                <small>Coming soon</small>
+            </span>
+
         </nav>
+
     </aside>
 
     <div class="content">
+
+        <!-- Header -->
         <header>
+
             <div>
                 <h1>Dashboard</h1>
                 <p>Welcome back, Admin.</p>
@@ -523,114 +579,215 @@
             <form th:action="@{/logout}" method="post">
                 <button type="submit">Log Out</button>
             </form>
+
         </header>
 
         <main>
-            
 
+            <!-- Employee account success message -->
+            <p
+                class="success-message"
+                th:if="${success}"
+                th:text="${success}"
+                role="status">
+            </p>
+
+            <!-- Monthly Targets -->
             <section class="card">
+
                 <h2>Monthly Targets</h2>
 
                 <div class="charts">
+
                     <div class="chart-panel">
+
                         <h3>Order Target</h3>
-                        <div class="donut orders" role="img"
-                             aria-label="Demo order target: 72 out of 100 orders">
+
+                        <div
+                            class="donut orders"
+                            role="img"
+                            aria-label="Demo order target: 72 out of 100 orders">
+
                             <div class="donut-center">
                                 <strong>72%</strong>
                                 <span>Target reached</span>
                             </div>
+
                         </div>
-                        <p><strong>72</strong> / 100 orders</p>
+
+                        <p>
+                            <strong>72</strong> / 100 orders
+                        </p>
+
                     </div>
 
                     <div class="chart-panel">
+
                         <h3>Revenue Target</h3>
-                        <div class="donut revenue" role="img"
-                             aria-label="Demo revenue target: 3250 dollars out of 5000 dollars">
+
+                        <div
+                            class="donut revenue"
+                            role="img"
+                            aria-label="Demo revenue target: 3250 dollars out of 5000 dollars">
+
                             <div class="donut-center">
                                 <strong>65%</strong>
                                 <span>Target reached</span>
                             </div>
+
                         </div>
-                        <p><strong>$3,250</strong> / $5,000</p>
+
+                        <p>
+                            <strong>$3,250</strong> / $5,000
+                        </p>
+
                     </div>
+
                 </div>
+
             </section>
 
             <div class="lower-grid">
+
+                <!-- Calendar -->
                 <section class="card">
+
                     <h2>Calendar</h2>
 
                     <div class="calendar-controls">
-                        <button type="button" id="previousMonth"
-                                aria-label="Previous month">‹</button>
-                        <strong id="calendarTitle" aria-live="polite"></strong>
-                        <button type="button" id="nextMonth"
-                                aria-label="Next month">›</button>
+
+                        <button
+                            type="button"
+                            id="previousMonth"
+                            aria-label="Previous month">
+                            ‹
+                        </button>
+
+                        <strong
+                            id="calendarTitle"
+                            aria-live="polite">
+                        </strong>
+
+                        <button
+                            type="button"
+                            id="nextMonth"
+                            aria-label="Next month">
+                            ›
+                        </button>
+
                     </div>
 
                     <div class="calendar" id="calendar"></div>
 
                 </section>
 
+                <!-- Employee List -->
                 <section class="card">
+
                     <h2>Employees</h2>
 
-                    <div th:if="${employees == null or #lists.isEmpty(employees)}"
-                         class="empty">
+                    <div
+                        th:if="${employees == null or #lists.isEmpty(employees)}"
+                        class="empty">
+
                         No employees yet.
+
                     </div>
 
                     <th:block th:if="${employees != null}">
-                        <div class="employee"
-                             th:each="employee, status : ${employees}"
-                             th:if="${status.index < 2}">
-                            <div class="avatar" aria-hidden="true">👤</div>
-                            <div>
-                                <strong th:text="${employee.name}">Employee name</strong>
-                                <p th:text="${employee.role}">Employee role</p>
+
+                        <div
+                            class="employee"
+                            th:each="employee : ${employees}">
+
+                            <div class="avatar" aria-hidden="true">
+                                👤
                             </div>
+
+                            <div>
+
+                                <strong th:text="${employee.name}">
+                                    Employee name
+                                </strong>
+
+                                <p th:text="${employee.role}">
+                                    Employee role
+                                </p>
+
+                            </div>
+
                         </div>
+
                     </th:block>
+
                 </section>
 
+                <!-- Recent Reviews -->
                 <section class="card reviews-card">
+
                     <h2>Recent Reviews</h2>
 
-                    <div th:if="${reviews == null or #lists.isEmpty(reviews)}"
-                         class="empty">
+                    <div
+                        th:if="${reviews == null or #lists.isEmpty(reviews)}"
+                        class="empty">
+
                         No reviews yet.
+
                     </div>
 
                     <th:block th:if="${reviews != null}">
-                        <article class="review"
-                                 th:each="review, status : ${reviews}"
-                                 th:if="${status.index < 3}">
+
+                        <article
+                            class="review"
+                            th:each="review, status : ${reviews}"
+                            th:if="${status.index < 3}">
+
                             <strong th:text="${review.customerName}">
                                 Customer name
                             </strong>
-                            <div class="stars"
-                                 th:text="${review.rating + ' / 5'}">
+
+                            <div
+                                class="stars"
+                                th:text="${review.rating + ' / 5'}">
                                 5 / 5
                             </div>
-                            <p th:text="${review.comment}">Review comment</p>
+
+                            <p th:text="${review.comment}">
+                                Review comment
+                            </p>
+
                         </article>
+
                     </th:block>
+
                 </section>
+
             </div>
+
         </main>
+
     </div>
 
-    <dialog id="noteDialog" class="note-dialog" aria-labelledby="noteTitle">
+    <!-- Calendar Note Window -->
+    <dialog
+        id="noteDialog"
+        class="note-dialog"
+        aria-labelledby="noteTitle">
+
         <form id="noteForm">
+
             <h2 id="noteTitle">Day note</h2>
 
             <label for="dayNote">Note</label>
-            <textarea id="dayNote" maxlength="1000"
-                      placeholder="Write your note here..." required></textarea>
+
+            <textarea
+                id="dayNote"
+                maxlength="1000"
+                placeholder="Write your note here..."
+                required></textarea>
 
             <label for="noteColor">Day colour</label>
+
             <select id="noteColor">
                 <option value="light-green">Light green</option>
                 <option value="yellow">Yellow</option>
@@ -638,34 +795,81 @@
                 <option value="red">Red</option>
             </select>
 
-            <p id="noteError" class="note-error" role="alert" hidden></p>
+            <p
+                id="noteError"
+                class="note-error"
+                role="alert"
+                hidden>
+            </p>
 
             <div class="note-actions">
-                <button type="button" id="deleteNote" class="delete">Delete</button>
-                <button type="button" id="cancelNote" class="secondary">Cancel</button>
-                <button type="submit">Save</button>
+
+                <button
+                    type="button"
+                    id="deleteNote"
+                    class="delete">
+                    Delete
+                </button>
+
+                <button
+                    type="button"
+                    id="cancelNote"
+                    class="secondary">
+                    Cancel
+                </button>
+
+                <button type="submit">
+                    Save
+                </button>
+
             </div>
+
         </form>
+
     </dialog>
 
     <script>
         const today = new Date();
-        let displayedMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+        let displayedMonth = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            1
+        );
+
         let selectedDate = "";
 
         const storageKey = "cookiegram-admin-calendar-notes";
-        const allowedColors = ["light-green", "yellow", "green", "red"];
+
+        const allowedColors = [
+            "light-green",
+            "yellow",
+            "green",
+            "red"
+        ];
+
         let notes = {};
 
+        // Load calendar notes from browser storage
         try {
-            const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+            const saved = JSON.parse(
+                localStorage.getItem(storageKey) || "{}"
+            );
 
-            if (saved && typeof saved === "object" && !Array.isArray(saved)) {
+            if (
+                saved &&
+                typeof saved === "object" &&
+                !Array.isArray(saved)
+            ) {
                 for (const [key, note] of Object.entries(saved)) {
-                    if (/^\d{4}-\d{2}-\d{2}$/.test(key) &&
-                        note && typeof note.text === "string") {
+                    if (
+                        /^\d{4}-\d{2}-\d{2}$/.test(key) &&
+                        note &&
+                        typeof note.text === "string"
+                    ) {
                         notes[key] = {
                             text: note.text,
+
                             color: allowedColors.includes(note.color)
                                 ? note.color
                                 : "light-green"
@@ -678,16 +882,22 @@
         }
 
         const dialog = document.getElementById("noteDialog");
+
         const noteInput = document.getElementById("dayNote");
+
         const colorInput = document.getElementById("noteColor");
+
         const errorMessage = document.getElementById("noteError");
 
+        // Convert a date into YYYY-MM-DD
         function dateKey(year, month, day) {
             return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
         }
 
+        // Open note window
         function openNote(key, date) {
             selectedDate = key;
+
             const existing = notes[key];
 
             document.getElementById("noteTitle").textContent =
@@ -698,30 +908,46 @@
                 });
 
             noteInput.value = existing?.text || "";
+
             colorInput.value = existing?.color || "light-green";
+
             document.getElementById("deleteNote").hidden = !existing;
+
             errorMessage.hidden = true;
 
             dialog.showModal();
+
             noteInput.focus();
         }
 
+        // Save notes to browser storage
         function persistNotes(updatedNotes) {
             try {
-                localStorage.setItem(storageKey, JSON.stringify(updatedNotes));
+                localStorage.setItem(
+                    storageKey,
+                    JSON.stringify(updatedNotes)
+                );
+
                 notes = updatedNotes;
+
                 dialog.close();
+
                 renderCalendar();
+
             } catch {
                 errorMessage.textContent =
                     "Could not save your note. Please check browser storage settings.";
+
                 errorMessage.hidden = false;
             }
         }
 
+        // Display calendar
         function renderCalendar() {
             const calendar = document.getElementById("calendar");
+
             const year = displayedMonth.getFullYear();
+
             const month = displayedMonth.getMonth();
 
             document.getElementById("calendarTitle").textContent =
@@ -732,30 +958,53 @@
 
             calendar.replaceChildren();
 
-            ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach(day => {
+            [
+                "Sun",
+                "Mon",
+                "Tue",
+                "Wed",
+                "Thu",
+                "Fri",
+                "Sat"
+            ].forEach(day => {
                 const label = document.createElement("span");
+
                 label.className = "weekday";
+
                 label.textContent = day;
+
                 calendar.appendChild(label);
             });
 
             const firstDay = new Date(year, month, 1).getDay();
-            const totalDays = new Date(year, month + 1, 0).getDate();
+
+            const totalDays = new Date(
+                year,
+                month + 1,
+                0
+            ).getDate();
 
             for (let i = 0; i < firstDay; i++) {
                 const blank = document.createElement("span");
+
                 blank.setAttribute("aria-hidden", "true");
+
                 calendar.appendChild(blank);
             }
 
             for (let day = 1; day <= totalDays; day++) {
                 const date = new Date(year, month, day);
+
                 const key = dateKey(year, month, day);
+
                 const note = notes[key];
 
                 const cell = document.createElement("button");
+
                 cell.type = "button";
+
                 cell.className = "calendar-day";
+
                 cell.textContent = day;
 
                 const dateLabel = date.toLocaleDateString("en-CA", {
@@ -764,68 +1013,112 @@
                     year: "numeric"
                 });
 
-                cell.setAttribute("aria-label",
-                    `${dateLabel}${note ? ", has a " + note.color + " note" : ", add a note"}`);
+                cell.setAttribute(
+                    "aria-label",
+                    `${dateLabel}${note
+                        ? ", has a " + note.color + " note"
+                        : ", add a note"}`
+                );
 
                 if (note) {
                     cell.classList.add("has-note", note.color);
+
                     cell.title = note.text;
                 }
 
-                if (day === today.getDate() &&
+                if (
+                    day === today.getDate() &&
                     month === today.getMonth() &&
-                    year === today.getFullYear()) {
+                    year === today.getFullYear()
+                ) {
                     cell.classList.add("today");
+
                     cell.setAttribute("aria-current", "date");
                 }
 
-                cell.addEventListener("click", () => openNote(key, date));
+                cell.addEventListener("click", () => {
+                    openNote(key, date);
+                });
+
                 calendar.appendChild(cell);
             }
         }
 
-        document.getElementById("noteForm").addEventListener("submit", event => {
-            event.preventDefault();
+        // Save a calendar note
+        document
+            .getElementById("noteForm")
+            .addEventListener("submit", event => {
 
-            const text = noteInput.value.trim();
+                event.preventDefault();
 
-            if (!text) {
-                errorMessage.textContent = "Please enter a note.";
-                errorMessage.hidden = false;
-                noteInput.focus();
-                return;
-            }
+                const text = noteInput.value.trim();
 
-            persistNotes({
-                ...notes,
-                [selectedDate]: {
-                    text: text,
-                    color: colorInput.value
+                if (!text) {
+                    errorMessage.textContent = "Please enter a note.";
+
+                    errorMessage.hidden = false;
+
+                    noteInput.focus();
+
+                    return;
                 }
+
+                persistNotes({
+                    ...notes,
+
+                    [selectedDate]: {
+                        text: text,
+                        color: colorInput.value
+                    }
+                });
             });
-        });
 
-        document.getElementById("deleteNote").addEventListener("click", () => {
-            const updatedNotes = { ...notes };
-            delete updatedNotes[selectedDate];
-            persistNotes(updatedNotes);
-        });
+        // Delete a calendar note
+        document
+            .getElementById("deleteNote")
+            .addEventListener("click", () => {
 
-        document.getElementById("cancelNote").addEventListener("click", () => {
-            dialog.close();
-        });
+                const updatedNotes = { ...notes };
 
-        document.getElementById("previousMonth").addEventListener("click", () => {
-            displayedMonth.setMonth(displayedMonth.getMonth() - 1);
-            renderCalendar();
-        });
+                delete updatedNotes[selectedDate];
 
-        document.getElementById("nextMonth").addEventListener("click", () => {
-            displayedMonth.setMonth(displayedMonth.getMonth() + 1);
-            renderCalendar();
-        });
+                persistNotes(updatedNotes);
+            });
+
+        // Close note window
+        document
+            .getElementById("cancelNote")
+            .addEventListener("click", () => {
+
+                dialog.close();
+            });
+
+        // Previous month
+        document
+            .getElementById("previousMonth")
+            .addEventListener("click", () => {
+
+                displayedMonth.setMonth(
+                    displayedMonth.getMonth() - 1
+                );
+
+                renderCalendar();
+            });
+
+        // Next month
+        document
+            .getElementById("nextMonth")
+            .addEventListener("click", () => {
+
+                displayedMonth.setMonth(
+                    displayedMonth.getMonth() + 1
+                );
+
+                renderCalendar();
+            });
 
         renderCalendar();
     </script>
+
 </body>
 </html>

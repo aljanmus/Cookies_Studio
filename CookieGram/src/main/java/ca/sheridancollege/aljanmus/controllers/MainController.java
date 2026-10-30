@@ -28,7 +28,15 @@ public class MainController {
      */
     private final List<Map<String, String>> employees =
             new CopyOnWriteArrayList<>();
+
     private final List<Map<String, String>> contactMessages =
+            new CopyOnWriteArrayList<>();
+
+    /*
+     * Stores orders placed by guests (no account).
+     * This list resets when the application restarts.
+     */
+    private final List<Map<String, String>> guestOrders =
             new CopyOnWriteArrayList<>();
 
     public MainController(
@@ -40,7 +48,7 @@ public class MainController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Login page
+    // Home page
     @GetMapping("/")
     public String home(Model model) {
 
@@ -49,6 +57,7 @@ public class MainController {
         return "home";
     }
 
+    // Login page
     @GetMapping("/login")
     public String login() {
 
@@ -64,7 +73,6 @@ public class MainController {
 
         return "admin";
     }
-    
 
     // Open the add employee page
     @GetMapping("/admin/add-employee")
@@ -153,11 +161,83 @@ public class MainController {
         return "customer";
     }
 
-    // Payment page, if you have already added payment.html
+    // Payment page for logged-in customers
     @GetMapping("/customer/payment")
     public String payment() {
 
         return "payment";
+    }
+
+    // Open the guest checkout page (no login needed)
+    @GetMapping("/guest/checkout")
+    public String guestCheckout() {
+
+        return "guest-checkout";
+    }
+
+    // Receive a guest order
+    @PostMapping("/guest/checkout")
+    public String placeGuestOrder(
+
+            @RequestParam String name,
+
+            @RequestParam String email,
+
+            @RequestParam String address,
+
+            RedirectAttributes redirectAttributes) {
+
+        name = name.trim();
+        email = email.trim().toLowerCase(Locale.ROOT);
+        address = address.trim();
+
+        // Check required fields and email format
+        if (name.isBlank()
+                || email.isBlank()
+                || address.isBlank()
+                || !email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+
+            redirectAttributes.addFlashAttribute(
+                "error",
+                "Please enter your name, a valid email and your address."
+            );
+
+            return "redirect:/guest/checkout";
+        }
+
+        // Check field lengths
+        if (name.length() > 100
+                || email.length() > 150
+                || address.length() > 300) {
+
+            redirectAttributes.addFlashAttribute(
+                "error",
+                "One of the fields is too long. Please check your information."
+            );
+
+            return "redirect:/guest/checkout";
+        }
+
+        // Save the guest order
+        guestOrders.add(
+
+            Map.of(
+                "name", name,
+                "email", email,
+                "address", address
+            )
+        );
+
+        redirectAttributes.addFlashAttribute("name", name);
+
+        return "redirect:/guest/confirmation";
+    }
+
+    // Show the order confirmation to the guest
+    @GetMapping("/guest/confirmation")
+    public String guestConfirmation() {
+
+        return "guest-confirmation";
     }
 
     // Employee page
@@ -166,13 +246,13 @@ public class MainController {
 
         return "employee";
     }
- // Open the Contact Us page
+
+    // Open the Contact Us page
     @GetMapping("/contact")
     public String contact() {
 
         return "contact";
     }
-
 
     // Receive a message from the Contact Us page
     @PostMapping("/contact")
@@ -233,6 +313,7 @@ public class MainController {
 
         return "redirect:/contact";
     }
+
     private List<Map<String, String>> getPromotions() {
 
         return List.of(
@@ -253,5 +334,4 @@ public class MainController {
             )
         );
     }
-    
 }

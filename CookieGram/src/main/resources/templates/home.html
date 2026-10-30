@@ -46,6 +46,8 @@
 
         .header-links {
             display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
             align-items: center;
             gap: 20px;
         }
@@ -109,6 +111,44 @@
             color: #746258;
             font-size: 18px;
             line-height: 1.6;
+        }
+
+        .shop-button {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 13px 26px;
+            border-radius: 8px;
+            background: #8b4513;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .shop-button:hover {
+            background: #69330d;
+        }
+
+        .welcome-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .register-button {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 11px 24px;
+            border: 2px solid #8b4513;
+            border-radius: 8px;
+            color: #8b4513;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .register-button:hover {
+            background: #f5e5d5;
         }
 
         /* Promotions */
@@ -272,8 +312,13 @@
                 Contact Us
             </a>
 
-            <!-- Opens guest checkout (no account needed) -->
-            <a th:href="@{/guest/checkout}" class="guest-button">
+            <!-- Opens the Create Account page -->
+            <a th:href="@{/register}" class="contact-link">
+                Create Account
+            </a>
+
+            <!-- Guests pick cookies first, then check out without an account -->
+            <a th:href="@{/products}" class="guest-button">
                 Order as Guest
             </a>
 
@@ -296,6 +341,20 @@
             <p>
                 Discover our cookies and check out our latest promotions.
             </p>
+
+            <div class="welcome-buttons">
+
+                <!-- Opens the product list -->
+                <a th:href="@{/products}" class="shop-button">
+                    Shop Our Cookies
+                </a>
+
+                <!-- Opens the Create Account page -->
+                <a th:href="@{/register}" class="register-button">
+                    Create an Account
+                </a>
+
+            </div>
 
         </section>
 
@@ -368,8 +427,12 @@
                     Promotions
                 </a>
 
-                <a th:href="@{/guest/checkout}">
-                    Order as Guest
+                <a th:href="@{/products}">
+                    Shop Cookies
+                </a>
+
+                <a th:href="@{/register}">
+                    Create Account
                 </a>
 
                 <a th:href="@{/login}">

@@ -20,15 +20,19 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
 
-            		.requestMatchers(
-            			    "/",
-            			    "/login",
-            			    "/contact",
-            			    "/guest/**",
-            			    "/css/**",
-            			    "/images/**",
-            			    "/error"
-            			).permitAll()
+                .requestMatchers(
+                    "/",
+                    "/login",
+                    "/register",
+                    "/contact",
+                    "/products",
+                    "/cart",
+                    "/cart/**",
+                    "/guest/**",
+                    "/css/**",
+                    "/images/**",
+                    "/error"
+                ).permitAll()
 
                 .requestMatchers("/customer/**")
                     .hasRole("CUSTOMER")

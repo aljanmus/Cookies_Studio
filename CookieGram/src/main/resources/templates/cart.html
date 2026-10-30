@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookieGram | Your Cart</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fff5e9;
+            color: #493024;
+        }
+
+        /* Header */
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 7%;
+            background: #8b4513;
+            color: white;
+        }
+
+        .logo {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .header-link {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .header-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Main content */
+
+        main {
+            max-width: 800px;
+            margin: 40px auto 70px;
+            padding: 0 24px;
+        }
+
+        h2 {
+            color: #8b4513;
+            font-size: 32px;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .error {
+            background: #fde8e8;
+            color: #9b1c1c;
+        }
+
+        .panel {
+            padding: 24px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(73, 48, 36, 0.12);
+        }
+
+        .empty {
+            text-align: center;
+            color: #746258;
+        }
+
+        /* Cart table */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #eadbce;
+            text-align: left;
+        }
+
+        th {
+            color: #746258;
+            font-size: 14px;
+        }
+
+        .remove-button {
+            padding: 6px 12px;
+            border: 1px solid #c9b6a8;
+            border-radius: 6px;
+            background: white;
+            color: #9b1c1c;
+            cursor: pointer;
+        }
+
+        .remove-button:hover {
+            background: #fde8e8;
+        }
+
+        .total-row {
+            margin-top: 18px;
+            text-align: right;
+            font-size: 20px;
+        }
+
+        /* Checkout buttons */
+
+        .checkout-box {
+            margin-top: 28px;
+            text-align: center;
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .primary-button,
+        .secondary-button {
+            display: inline-block;
+            padding: 13px 22px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .primary-button {
+            background: #8b4513;
+            color: white;
+        }
+
+        .primary-button:hover {
+            background: #69330d;
+        }
+
+        .secondary-button {
+            border: 2px solid #8b4513;
+            color: #8b4513;
+        }
+
+        .secondary-button:hover {
+            background: #f5e5d5;
+        }
+
+        .small {
+            margin-top: 16px;
+            color: #746258;
+            font-size: 14px;
+        }
+
+        .small a,
+        .back-link {
+            color: #8b4513;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+
+        <h1 class="logo">
+            <a th:href="@{/}">🍪 CookieGram</a>
+        </h1>
+
+        <a th:href="@{/products}" class="header-link">Shop Cookies</a>
+
+    </header>
+
+    <main>
+
+        <h2>Your Cart</h2>
+
+        <div th:if="${error}" class="message error" role="alert"
+             th:text="${error}"></div>
+
+        <div class="panel">
+
+            <!-- Empty cart -->
+            <div th:if="${#lists.isEmpty(cartItems)}" class="empty">
+
+                <p>Your cart is empty.</p>
+
+                <a th:href="@{/products}" class="primary-button">
+                    Browse our cookies
+                </a>
+
+            </div>
+
+            <!-- Cart with items -->
+            <div th:unless="${#lists.isEmpty(cartItems)}">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Cookie</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Subtotal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:each="item : ${cartItems}">
+
+                                <td th:text="${item.product.name}">Cookie</td>
+
+                                <td th:text="'$' + ${#numbers.formatDecimal(item.product.price, 1, 2)}">
+                                    $0.00
+                                </td>
+
+                                <td th:text="${item.quantity}">1</td>
+
+                                <td th:text="'$' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">
+                                    $0.00
+                                </td>
+
+                                <td>
+                                    <form th:action="@{/cart/remove}" method="post">
+
+                                        <input type="hidden" name="productId"
+                                               th:value="${item.product.id}">
+
+                                        <button type="submit" class="remove-button">
+                                            Remove
+                                        </button>
+
+                                    </form>
+                                </td>
+
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="total-row">
+                    Total:
+                    <strong th:text="'$' + ${#numbers.formatDecimal(cartTotal, 1, 2)}">
+                        $0.00
+                    </strong>
+                </div>
+
+                <div class="checkout-box">
+
+                    <!-- Logged-in customers go straight to checkout -->
+                    <div th:if="${isCustomer}">
+                        <a th:href="@{/customer/payment}" class="primary-button">
+                            Proceed to Checkout
+                        </a>
+                    </div>
+
+                    <!-- Everyone else can log in or check out as a guest -->
+                    <div th:unless="${isCustomer}">
+
+                        <p>How would you like to check out?</p>
+
+                        <div class="button-row">
+
+                            <a th:href="@{/login}" class="primary-button">
+                                Log In to Checkout
+                            </a>
+
+                            <a th:href="@{/guest/checkout}" class="secondary-button">
+                                Checkout as Guest
+                            </a>
+
+                        </div>
+
+                        <p class="small">
+                            New here?
+                            <a th:href="@{/register}">Create an account</a>
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <a th:href="@{/products}" class="back-link">← Continue shopping</a>
+
+    </main>
+
+</body>
+</html>

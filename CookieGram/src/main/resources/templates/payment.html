@@ -42,6 +42,17 @@
             color: #847165;
         }
 
+        .message {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .error {
+            background: #fde8e8;
+            color: #9b1c1c;
+        }
+
         .order-summary {
             background: #f8f5f0;
             padding: 18px;
@@ -68,12 +79,14 @@
             font-weight: bold;
         }
 
-        input {
+        input,
+        textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid #c9b6a8;
             border-radius: 8px;
             font-size: 16px;
+            font-family: inherit;
             box-sizing: border-box;
         }
 
@@ -118,51 +131,70 @@
 
     <div class="container">
 
-        <h2>Online Payment</h2>
+        <h2>Checkout</h2>
 
-        <p>Review your order before paying online.</p>
+        <p>Review your order before placing it.</p>
 
-        <!-- Example only: replace with real order details later -->
+        <div th:if="${error}" class="message error" role="alert"
+             th:text="${error}"></div>
+
+        <!-- Order summary from the cart -->
         <div class="order-summary">
 
             <strong>Order Summary</strong>
 
-            <div class="order-row">
-                <span>Cookies × 1</span>
-                <span>$25.00</span>
+            <div class="order-row" th:each="item : ${cartItems}">
+                <span th:text="${item.product.name} + ' × ' + ${item.quantity}">Cookies × 1</span>
+                <span th:text="'$' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">$0.00</span>
             </div>
 
             <div class="order-row total">
                 <span>Total</span>
-                <span>$25.00</span>
+                <span th:text="'$' + ${#numbers.formatDecimal(cartTotal, 1, 2)}">$0.00</span>
             </div>
 
         </div>
 
-        <form>
+        <!-- th:action adds the CSRF token automatically -->
+        <form th:action="@{/customer/payment}" method="post">
 
-            <label for="customerName">Full Name</label>
+            <label for="name">Full Name</label>
             <input
                 type="text"
-                id="customerName"
-                name="customerName"
+                id="name"
+                name="name"
+                maxlength="100"
                 placeholder="Enter your name"
+                autocomplete="name"
                 required
             >
 
-            <label for="customerEmail">Email Address</label>
+            <label for="email">Email Address</label>
             <input
                 type="email"
-                id="customerEmail"
-                name="customerEmail"
+                id="email"
+                name="email"
+                maxlength="150"
+                th:value="${email}"
                 placeholder="Enter your email"
+                autocomplete="email"
                 required
             >
 
-            <div class="buttons">
-                <button type="button">Continue to Payment</button>
+            <label for="address">Delivery Address</label>
+            <textarea
+                id="address"
+                name="address"
+                rows="3"
+                maxlength="300"
+                autocomplete="street-address"
+                required
+            ></textarea>
 
-                <a th:href="@{/customer}" class="cancel">Cancel</a>
+            <div class="buttons">
+                <button type="submit">Place Order</button>
+
+                <a th:href="@{/cart}" class="cancel">Back to Cart</a>
             </div>
 
         </form>

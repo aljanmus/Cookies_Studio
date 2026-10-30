@@ -2,38 +2,49 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CookieGram | Order Confirmed</title>
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: #fff5e9; color: #493025; }
+        body { margin: 0; font-family: Arial, sans-serif; background: #fff5e9; color: #493024; }
         header { background: #8b4513; color: white; padding: 24px 7%; display: flex; justify-content: space-between; align-items: center; }
         header h1 { margin: 0; }
         header a { background: white; color: #8b4513; padding: 10px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; }
         main { max-width: 600px; margin: 40px auto; padding: 0 24px; text-align: center; }
         h2 { color: #8b4513; }
         .box { background: white; padding: 32px 24px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08); }
+        .summary { background: #f8f5f0; padding: 16px; border-radius: 8px; margin: 20px 0; text-align: left; }
+        .summary p { margin: 6px 0; }
+        a { color: #8b4513; }
         footer { text-align: center; padding: 24px; color: #746258; }
     </style>
 </head>
 <body>
     <header>
-        <h1>CookieGram</h1>
+        <h1>🍪 CookieGram</h1>
         <a th:href="@{/}">Home</a>
     </header>
 
     <main>
         <div class="box">
-            <!-- Shows the guest's name; falls back to a general message if the page is refreshed -->
+            <!-- Shows the name; falls back to a general message if the page is refreshed -->
             <h2 th:if="${name}" th:text="'Thank you, ' + ${name} + '!'">Thank you!</h2>
             <h2 th:unless="${name}">Thank you!</h2>
 
             <p>Your order has been placed. We'll send the details to your email.</p>
 
-            <p><a th:href="@{/}">Back to Home</a></p>
+            <!-- Order summary (only shown right after the order is placed) -->
+            <div class="summary" th:if="${orderItems}">
+                <p><strong>Items:</strong> <span th:text="${orderItems}">items</span></p>
+                <p><strong>Total:</strong>
+                   <span th:text="'$' + ${#numbers.formatDecimal(orderTotal, 1, 2)}">$0.00</span></p>
+            </div>
+
+            <p><a th:href="@{/products}">Order more cookies</a></p>
         </div>
     </main>
 
     <footer>
-        &copy; CookieGram
+        &copy; 2026 CookieGram
     </footer>
 </body>
 </html>

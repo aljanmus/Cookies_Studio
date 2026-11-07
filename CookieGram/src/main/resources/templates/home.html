@@ -46,6 +46,8 @@
 
         .header-links {
             display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
             align-items: center;
             gap: 20px;
         }
@@ -74,6 +76,22 @@
             background: #f5e5d5;
         }
 
+        /* Guest checkout button: outlined, next to Log In */
+
+        .guest-button {
+            display: inline-block;
+            padding: 9px 18px;
+            border: 2px solid white;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .guest-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
         /* Main content */
 
         main {
@@ -93,6 +111,44 @@
             color: #746258;
             font-size: 18px;
             line-height: 1.6;
+        }
+
+        .shop-button {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 13px 26px;
+            border-radius: 8px;
+            background: #8b4513;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .shop-button:hover {
+            background: #69330d;
+        }
+
+        .welcome-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .register-button {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 11px 24px;
+            border: 2px solid #8b4513;
+            border-radius: 8px;
+            color: #8b4513;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .register-button:hover {
+            background: #f5e5d5;
         }
 
         /* Promotions */
@@ -230,6 +286,11 @@
                 padding: 10px 14px;
             }
 
+            .guest-button {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
             .promotion-card img {
                 height: 230px;
             }
@@ -251,6 +312,16 @@
                 Contact Us
             </a>
 
+            <!-- Opens the Create Account page -->
+            <a th:href="@{/register}" class="contact-link">
+                Create Account
+            </a>
+
+            <!-- Guests pick cookies first, then check out without an account -->
+            <a th:href="@{/products}" class="guest-button">
+                Order as Guest
+            </a>
+
             <!-- Opens the login page -->
             <a th:href="@{/login}" class="login-button">
                 Log In
@@ -270,6 +341,20 @@
             <p>
                 Discover our cookies and check out our latest promotions.
             </p>
+
+            <div class="welcome-buttons">
+
+                <!-- Opens the product list -->
+                <a th:href="@{/products}" class="shop-button">
+                    Shop Our Cookies
+                </a>
+
+                <!-- Opens the Create Account page -->
+                <a th:href="@{/register}" class="register-button">
+                    Create an Account
+                </a>
+
+            </div>
 
         </section>
 
@@ -313,70 +398,75 @@
     </main>
 
     <!-- Footer -->
-   <!-- Footer -->
-<footer>
+    <footer>
 
-    <div class="footer-content">
+        <div class="footer-content">
 
-        <!-- About -->
-        <div class="footer-section">
+            <!-- About -->
+            <div class="footer-section">
 
-            <h3>🍪 CookieGram</h3>
+                <h3>🍪 CookieGram</h3>
 
-            <p>
-                Welcome to CookieGram! Explore our cookies and discover
-                our latest promotions.
-            </p>
+                <p>
+                    Welcome to CookieGram! Explore our cookies and discover
+                    our latest promotions.
+                </p>
+
+            </div>
+
+            <!-- Quick links -->
+            <div class="footer-section">
+
+                <h3>Quick Links</h3>
+
+                <a th:href="@{/}">
+                    Home
+                </a>
+
+                <a href="#promotions">
+                    Promotions
+                </a>
+
+                <a th:href="@{/products}">
+                    Shop Cookies
+                </a>
+
+                <a th:href="@{/register}">
+                    Create Account
+                </a>
+
+                <a th:href="@{/login}">
+                    Log In
+                </a>
+
+            </div>
+
+            <!-- Contact information -->
+            <div class="footer-section">
+
+                <h3>Contact Us</h3>
+
+                <a th:href="@{/contact}">
+                    Have a question? Press here
+                </a>
+
+                <p>Email:</p>
+
+                <a href="mailto:customerService@CookieGram.ca">
+                    customerService@CookieGram.ca
+                </a>
+
+                <p>Phone: 647-000-999</p>
+
+            </div>
 
         </div>
 
-        <!-- Quick links -->
-        <div class="footer-section">
-
-            <h3>Quick Links</h3>
-
-            <a th:href="@{/}">
-                Home
-            </a>
-
-            <a href="#promotions">
-                Promotions
-            </a>
-
-            <a th:href="@{/login}">
-                Log In
-            </a>
-
+        <div class="footer-bottom">
+            &copy; 2026 CookieGram. All rights reserved.
         </div>
 
-        <!-- Contact information -->
-        <div class="footer-section">
-
-            <h3>Contact Us</h3>
-
-           
-
-            <a th:href="@{/contact}">
-               Have a question? Press here
-            </a>
-
-            <p>Email:</p>
-
-            <a href="mailto:customerService@CookieGram.ca">
-                customerService@CookieGram.ca
-            </a>
-
-            <p>Phone: 647-000-999</p>
-
-        </div>
-
-    </div>
-
-    <div class="footer-bottom">
-        &copy; 2026 CookieGram. All rights reserved.
-    </div>
-
-</footer>
+    </footer>
 
     <script>
         // Get all promotion cards

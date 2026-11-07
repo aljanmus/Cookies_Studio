@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CookieGram | Employee Dashboard</title>
+
     <style>
         * {
             box-sizing: border-box;
@@ -20,7 +22,7 @@
         header {
             background: #8b4513;
             color: white;
-            padding: 24px 7%;
+            padding: 22px 7%;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -30,20 +32,69 @@
 
         header h1 {
             margin: 0;
+            font-size: 30px;
+        }
+
+        .logout {
+            background: white;
+            color: #8b4513;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .logout:hover {
+            background: #fff0d8;
+            transform: translateY(-2px);
         }
 
         main {
-            max-width: 1000px;
+            max-width: 1050px;
             margin: 40px auto;
             padding: 0 24px;
         }
 
-        .welcome, .dashboard-card {
+        .welcome {
             background: white;
-            padding: 28px;
+            padding: 35px;
             border-radius: 16px;
             box-shadow: 0 8px 25px rgba(73, 48, 36, 0.10);
-            margin-bottom: 24px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .welcome h2 {
+            color: #8b4513;
+            margin-top: 0;
+            font-size: 27px;
+        }
+
+        .welcome p {
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .cookie-icon {
+            font-size: 75px;
+            background: #fff0d8;
+            padding: 20px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(73, 48, 36, 0.10);
+            margin-bottom: 25px;
         }
 
         .dashboard-card h2 {
@@ -51,54 +102,166 @@
             margin-top: 0;
         }
 
-        .logout {
+        .dashboard-card p {
+            line-height: 1.6;
+        }
+
+        .order-button {
+            display: inline-block;
+            margin-top: 12px;
+            background: #8b4513;
             color: white;
-            border: 1px solid white;
-            padding: 10px 16px;
+            padding: 13px 22px;
             border-radius: 8px;
             text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
         }
 
-        .logout:hover {
+        .order-button:hover {
             background: #69330d;
+            transform: translateY(-2px);
         }
 
-        .status {
-            display: inline-block;
-            padding: 8px 12px;
+        .workflow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .workflow-step {
             background: #fff0d8;
-            border-radius: 8px;
+            color: #71370e;
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+            flex: 1;
+            min-width: 110px;
+        }
+
+        .arrow {
+            color: #8b4513;
+            font-size: 22px;
+            font-weight: bold;
         }
 
         footer {
             text-align: center;
             padding: 24px;
             color: #746258;
+            margin-top: 35px;
+        }
+
+        @media (max-width: 600px) {
+            .welcome {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .cookie-icon {
+                font-size: 50px;
+                padding: 14px;
+            }
+
+            .workflow {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .arrow {
+                text-align: center;
+                transform: rotate(90deg);
+            }
         }
     </style>
 </head>
+
 <body>
+
     <header>
-        <h1>CookieGram</h1>
-        <a class="logout" th:href="@{/login?logout}">Log Out</a>
+        <h1>🍪 CookieGram</h1>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="logout">
+                Log Out
+            </button>
+        </form>
     </header>
 
     <main>
+
+        <!-- Welcome Section -->
         <section class="welcome">
-            <h2>Employee Dashboard</h2>
-            <p>Welcome to CookieGram!</p>
-            <p>Manage your daily work and keep track of cookie orders.</p>
+            <div>
+                <h2>Welcome to the Employee Dashboard!</h2>
+
+                <p>
+                    Welcome to CookieGram! Manage your daily work
+                    and keep track of customer cookie orders.
+                </p>
+
+                <p>
+                    Check incoming orders and make sure every
+                    customer's request is prepared correctly.
+                </p>
+            </div>
+
+            <div class="cookie-icon">
+                🍪
+            </div>
         </section>
 
+        <!-- Order Management -->
         <section class="dashboard-card">
-            <h2>Order Management</h2>
-            <p>Use this dashboard to access employee order-management tasks.</p>
-            <span class="status">Employee Portal</span>
+            <h2>📋 Order Management</h2>
+
+            <p>
+                View customer orders, check cookie quantities,
+                read special instructions, and update preparation status.
+            </p>
+
+            <a th:href="@{/employee/orders}" class="order-button">
+                View Customer Orders
+            </a>
         </section>
+
+        <!-- Order Preparation Workflow -->
+        <section class="dashboard-card">
+            <h2>🥐 Order Preparation Process</h2>
+
+            <p>
+                Follow these steps to keep customer orders organized
+                and make sure each order is completed.
+            </p>
+
+            <div class="workflow">
+                <div class="workflow-step">Pending</div>
+
+                <span class="arrow">→</span>
+
+                <div class="workflow-step">Preparing</div>
+
+                <span class="arrow">→</span>
+
+                <div class="workflow-step">Ready</div>
+
+                <span class="arrow">→</span>
+
+                <div class="workflow-step">Completed</div>
+            </div>
+        </section>
+
     </main>
 
     <footer>
-        CookieGram Employee Portal
+        © CookieGram Employee Portal
     </footer>
+
 </body>
 </html>
+
+

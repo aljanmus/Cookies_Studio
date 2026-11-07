@@ -5,8 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
@@ -14,27 +19,41 @@ import ca.sheridancollege.aljanmus.controllers.MainController;
 
 public class MainControllerTests {
 
+    private MainController controller;
+
+    @BeforeEach
+    void setUp() {
+        InMemoryUserDetailsManager userDetailsManager =
+                new InMemoryUserDetailsManager();
+
+        PasswordEncoder passwordEncoder =
+                new BCryptPasswordEncoder();
+
+        controller = new MainController(
+                userDetailsManager,
+                passwordEncoder
+        );
+    }
+
     @Test
     void testLoginPage() {
-        MainController controller = new MainController();
         assertEquals("login", controller.login());
     }
 
     @Test
     void testAdminPage() {
-        MainController controller = new MainController();
-        assertEquals("admin", controller.admin());
+        Model model = new ExtendedModelMap();
+
+        assertEquals("admin", controller.admin(model));
     }
 
     @Test
     void testEmployeePage() {
-        MainController controller = new MainController();
         assertEquals("employee", controller.employee());
     }
 
     @Test
     void testCustomerPage() {
-        MainController controller = new MainController();
         Model model = new ExtendedModelMap();
 
         String result = controller.customer(model);
@@ -44,7 +63,6 @@ public class MainControllerTests {
 
     @Test
     void testCustomerPromotions() {
-        MainController controller = new MainController();
         Model model = new ExtendedModelMap();
 
         controller.customer(model);
@@ -56,11 +74,26 @@ public class MainControllerTests {
         List<?> promotionList = (List<?>) promotions;
 
         assertEquals(3, promotionList.size());
+
         assertTrue(promotionList.contains(
-            "20% off Chocolate Chip Cookies"));
+                Map.of(
+                        "title", "20% off Chocolate Chip Cookies",
+                        "image", "chocolate.jpeg"
+                )
+        ));
+
         assertTrue(promotionList.contains(
-            "Buy 12 cookies, get 2 free"));
+                Map.of(
+                        "title", "Buy 12 cookies, get 2 free",
+                        "image", "dozen.jpeg"
+                )
+        ));
+
         assertTrue(promotionList.contains(
-            "Free delivery on orders over $30"));
+                Map.of(
+                        "title", "Free delivery on orders over $30",
+                        "image", "delivery.jpeg"
+                )
+        ));
     }
 }

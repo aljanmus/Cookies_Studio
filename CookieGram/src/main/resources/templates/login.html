@@ -95,11 +95,21 @@
             color: #256029;
         }
 
-        .home-link {
-            display: block;
+        .register-text {
             margin-top: 24px;
             text-align: center;
+            color: #746258;
+        }
+
+        .register-text a,
+        .home-link {
             color: #8b4513;
+        }
+
+        .home-link {
+            display: block;
+            margin-top: 12px;
+            text-align: center;
         }
     </style>
 </head>
@@ -116,8 +126,13 @@
             You have been logged out successfully.
         </div>
 
+        <!-- Shown after a customer creates an account -->
+        <div th:if="${param.registered}" class="message success" role="status">
+            Your account was created. Please log in with your email.
+        </div>
+
         <form th:action="@{/login}" method="post">
-            <label for="username">Username</label>
+            <label for="username">Username or Email</label>
             <input type="text" id="username" name="username"
                    autocomplete="username" required autofocus>
 
@@ -127,6 +142,11 @@
 
             <button type="submit">Log In</button>
         </form>
+
+        <p class="register-text">
+            New to CookieGram?
+            <a th:href="@{/register}">Create an account</a>
+        </p>
 
         <a th:href="@{/}" class="home-link">Back to home</a>
     </main>

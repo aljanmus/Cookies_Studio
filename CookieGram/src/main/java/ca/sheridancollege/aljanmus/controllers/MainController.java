@@ -18,6 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class MainController {
 
+    private static final String EMAIL_PATTERN =
+            "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
+
     private final InMemoryUserDetailsManager userDetailsManager;
 
     private final PasswordEncoder passwordEncoder;
@@ -28,6 +31,7 @@ public class MainController {
      */
     private final List<Map<String, String>> employees =
             new CopyOnWriteArrayList<>();
+
     private final List<Map<String, String>> contactMessages =
             new CopyOnWriteArrayList<>();
 
@@ -40,7 +44,7 @@ public class MainController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Login page
+    // Home page
     @GetMapping("/")
     public String home(Model model) {
 
@@ -49,10 +53,103 @@ public class MainController {
         return "home";
     }
 
+    // Login page
     @GetMapping("/login")
     public String login() {
 
         return "login";
+    }
+
+    // Open the Create Account page
+    @GetMapping("/register")
+    public String register() {
+
+        return "register";
+    }
+
+    // Create a new customer account
+    @PostMapping("/register")
+    public synchronized String createCustomer(
+
+            @RequestParam String name,
+
+            @RequestParam String email,
+
+            @RequestParam String password,
+
+            @RequestParam String confirmPassword,
+
+            RedirectAttributes redirectAttributes) {
+
+        name = name.trim();
+
+        email = email.trim().toLowerCase(Locale.ROOT);
+
+        // Check required fields and email format
+        if (name.isBlank()
+                || email.isBlank()
+                || password.isBlank()
+                || !email.matches(EMAIL_PATTERN)) {
+
+            return registerError(
+                redirectAttributes,
+                "Please enter your name, a valid email and a password.",
+                name, email
+            );
+        }
+
+        // Check field lengths
+        if (name.length() > 100 || email.length() > 150) {
+
+            return registerError(
+                redirectAttributes,
+                "Your name or email is too long.",
+                name, email
+            );
+        }
+
+        // BCrypt only uses the first 72 characters of a password
+        if (password.length() < 8 || password.length() > 72) {
+
+            return registerError(
+                redirectAttributes,
+                "Your password must be between 8 and 72 characters.",
+                name, email
+            );
+        }
+
+        if (!password.equals(confirmPassword)) {
+
+            return registerError(
+                redirectAttributes,
+                "The passwords do not match.",
+                name, email
+            );
+        }
+
+        // Check if the email already exists
+        if (userDetailsManager.userExists(email)) {
+
+            return registerError(
+                redirectAttributes,
+                "An account with this email already exists. Please log in.",
+                name, email
+            );
+        }
+
+        // Create the customer login account (email is the username)
+        userDetailsManager.createUser(
+
+            User.withUsername(email)
+
+                .password(passwordEncoder.encode(password))
+
+                .roles("CUSTOMER")
+
+                .build()
+        );
+
+        return "redirect:/login?registered";
     }
 
     @GetMapping("/admin")
@@ -64,7 +161,6 @@ public class MainController {
 
         return "admin";
     }
-    
 
     // Open the add employee page
     @GetMapping("/admin/add-employee")
@@ -93,7 +189,7 @@ public class MainController {
         if (name.isBlank()
                 || email.isBlank()
                 || password.isBlank()
-                || !email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+                || !email.matches(EMAIL_PATTERN)) {
 
             redirectAttributes.addFlashAttribute(
                 "error",
@@ -153,26 +249,19 @@ public class MainController {
         return "customer";
     }
 
-    // Payment page, if you have already added payment.html
-    @GetMapping("/customer/payment")
-    public String payment() {
-
-        return "payment";
-    }
-
     // Employee page
     @GetMapping("/employee")
     public String employee() {
 
         return "employee";
     }
- // Open the Contact Us page
+
+    // Open the Contact Us page
     @GetMapping("/contact")
     public String contact() {
 
         return "contact";
     }
-
 
     // Receive a message from the Contact Us page
     @PostMapping("/contact")
@@ -233,6 +322,28 @@ public class MainController {
 
         return "redirect:/contact";
     }
+
+    // Sends the user back to the Create Account form with an error,
+    // keeping the name and email they typed (never the password)
+    private String registerError(
+
+            RedirectAttributes redirectAttributes,
+
+            String message,
+
+            String name,
+
+            String email) {
+
+        redirectAttributes.addFlashAttribute("error", message);
+
+        redirectAttributes.addFlashAttribute("name", name);
+
+        redirectAttributes.addFlashAttribute("email", email);
+
+        return "redirect:/register";
+    }
+
     private List<Map<String, String>> getPromotions() {
 
         return List.of(
@@ -253,5 +364,4 @@ public class MainController {
             )
         );
     }
-    
 }

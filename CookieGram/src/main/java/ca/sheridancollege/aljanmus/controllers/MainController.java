@@ -1,5 +1,6 @@
 package ca.sheridancollege.aljanmus.controllers;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -35,20 +36,50 @@ public class MainController {
     private final List<Map<String, String>> contactMessages =
             new CopyOnWriteArrayList<>();
 
+    private static final Map<String, String> PROMOTION_IMAGES = Map.of(
+            "chocolate.jpeg", "Chocolate chip cookie",
+            "dozen.jpeg", "Box of cookies",
+            "delivery.jpeg", "Delivery"
+    );
+
+    private final List<Map<String, String>> promotions =
+            new CopyOnWriteArrayList<>(List.of(
+
+                Map.of(
+                    "title", "20% off Chocolate Chip Cookies",
+                    "image", "chocolate.jpeg"
+                ),
+
+                Map.of(
+                    "title", "Buy 12 cookies, get 2 free",
+                    "image", "dozen.jpeg"
+                ),
+
+                Map.of(
+                    "title", "Free delivery on orders over $30",
+                    "image", "delivery.jpeg"
+                )
+            ));
+
+    private final ProductCatalog productCatalog;
+
     public MainController(
             InMemoryUserDetailsManager userDetailsManager,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            ProductCatalog productCatalog) {
 
         this.userDetailsManager = userDetailsManager;
 
         this.passwordEncoder = passwordEncoder;
+
+        this.productCatalog = productCatalog;
     }
 
     // Home page
     @GetMapping("/")
     public String home(Model model) {
 
-        model.addAttribute("promotions", getPromotions());
+        model.addAttribute("promotions", List.copyOf(promotions));
 
         return "home";
     }
@@ -159,7 +190,57 @@ public class MainController {
 
         model.addAttribute("contactMessages", contactMessages);
 
+        model.addAttribute("promotions", List.copyOf(promotions));
+        model.addAttribute("promotionImages", PROMOTION_IMAGES);
+        model.addAttribute("products", productCatalog.getProducts());
+
         return "admin";
+    }
+
+    @PostMapping("/admin/promotions")
+    public String savePromotion(
+            @RequestParam(required = false) Integer promotionIndex,
+            @RequestParam String title,
+            @RequestParam String image,
+            RedirectAttributes redirectAttributes) {
+
+        title = title.strip();
+        if (title.isBlank() || title.length() > 150 || !PROMOTION_IMAGES.containsKey(image)) {
+            redirectAttributes.addFlashAttribute(
+                    "promotionError", "Enter a title up to 150 characters and select an image.");
+        } else if (promotionIndex != null
+                && (promotionIndex < 0 || promotionIndex >= promotions.size())) {
+            redirectAttributes.addFlashAttribute("promotionError", "Promotion could not be found.");
+        } else {
+            Map<String, String> promotion = Map.of("title", title, "image", image);
+            if (promotionIndex == null) {
+                promotions.add(promotion);
+            } else {
+                promotions.set(promotionIndex, promotion);
+            }
+            redirectAttributes.addFlashAttribute("promotionSuccess", "Promotion saved.");
+        }
+
+        return "redirect:/admin#promotions";
+    }
+
+    @PostMapping("/admin/prices")
+    public String savePrice(
+            @RequestParam String productId,
+            @RequestParam String price,
+            RedirectAttributes redirectAttributes) {
+
+        price = price.strip();
+        if (!price.matches("[0-9]{1,6}(\\.[0-9]{1,2})?")) {
+            redirectAttributes.addFlashAttribute(
+                    "priceError", "Enter a price from $0.00 to $999,999.99 with up to two decimal places.");
+        } else if (!productCatalog.updatePrice(productId, new BigDecimal(price).setScale(2))) {
+            redirectAttributes.addFlashAttribute("priceError", "Cookie could not be found.");
+        } else {
+            redirectAttributes.addFlashAttribute("priceSuccess", "Cookie price updated.");
+        }
+
+        return "redirect:/admin#cookie-prices";
     }
 
     // Open the add employee page
@@ -244,7 +325,7 @@ public class MainController {
     @GetMapping("/customer")
     public String customer(Model model) {
 
-        model.addAttribute("promotions", getPromotions());
+        model.addAttribute("promotions", List.copyOf(promotions));
 
         return "customer";
     }
@@ -344,24 +425,4 @@ public class MainController {
         return "redirect:/register";
     }
 
-    private List<Map<String, String>> getPromotions() {
-
-        return List.of(
-
-            Map.of(
-                "title", "20% off Chocolate Chip Cookies",
-                "image", "chocolate.jpeg"
-            ),
-
-            Map.of(
-                "title", "Buy 12 cookies, get 2 free",
-                "image", "dozen.jpeg"
-            ),
-
-            Map.of(
-                "title", "Free delivery on orders over $30",
-                "image", "delivery.jpeg"
-            )
-        );
-    }
 }

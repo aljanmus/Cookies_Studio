@@ -515,6 +515,40 @@
                 font-size: 22px;
             }
         }
+        .catalog-settings {
+            margin-top: 22px;
+        }
+
+        .catalog-form {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: end;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee4da;
+        }
+
+        .catalog-form:last-child {
+            border-bottom: 0;
+        }
+
+        .catalog-form label {
+            display: grid;
+            gap: 6px;
+        }
+
+        .catalog-form input,
+        .catalog-form select {
+            max-width: 100%;
+            padding: 8px;
+            border: 1px solid #b39886;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        .catalog-error {
+            color: #a11d1d;
+        }
     </style>
 </head>
 
@@ -542,20 +576,14 @@
                 <small>Coming soon</small>
             </span>
 
-            <span class="planned">
-                Cookies
-                <small>Coming soon</small>
-            </span>
+            <a href="#cookie-prices">Cookie Prices</a>
 
             <!-- Opens the add employee page -->
             <a th:href="@{/admin/add-employee}">
                 Add Employee
             </a>
 
-            <span class="planned">
-                Promotions
-                <small>Coming soon</small>
-            </span>
+            <a href="#promotions">Promotions</a>
 
             <span class="planned">
                 Settings
@@ -763,6 +791,67 @@
                 </section>
 
             </div>
+
+            <section class="card catalog-settings" id="promotions">
+                <h2>Promotions</h2>
+                <p class="success-message" th:if="${promotionSuccess}"
+                   th:text="${promotionSuccess}" role="status"></p>
+                <p class="catalog-error" th:if="${promotionError}"
+                   th:text="${promotionError}" role="alert"></p>
+
+                <form class="catalog-form" th:each="promo, row : ${promotions}"
+                      th:action="@{/admin/promotions}" method="post">
+                    <input type="hidden" name="promotionIndex" th:value="${row.index}">
+                    <label>
+                        Promotion title
+                        <input name="title" th:value="${promo.title}" maxlength="150" required>
+                    </label>
+                    <label>
+                        Image
+                        <select name="image" required>
+                            <option th:each="image : ${promotionImages}" th:value="${image.key}"
+                                    th:text="${image.value}" th:selected="${image.key == promo.image}"></option>
+                        </select>
+                    </label>
+                    <button type="submit">Save Promotion</button>
+                </form>
+
+                <h3>Add Promotion</h3>
+                <form class="catalog-form" th:action="@{/admin/promotions}" method="post">
+                    <label>
+                        Promotion title
+                        <input name="title" maxlength="150" required>
+                    </label>
+                    <label>
+                        Image
+                        <select name="image" required>
+                            <option value="">Choose an image</option>
+                            <option th:each="image : ${promotionImages}"
+                                    th:value="${image.key}" th:text="${image.value}"></option>
+                        </select>
+                    </label>
+                    <button type="submit">Add Promotion</button>
+                </form>
+            </section>
+
+            <section class="card catalog-settings" id="cookie-prices">
+                <h2>Cookie Prices</h2>
+                <p class="success-message" th:if="${priceSuccess}"
+                   th:text="${priceSuccess}" role="status"></p>
+                <p class="catalog-error" th:if="${priceError}"
+                   th:text="${priceError}" role="alert"></p>
+
+                <form class="catalog-form" th:each="product : ${products}"
+                      th:action="@{/admin/prices}" method="post">
+                    <input type="hidden" name="productId" th:value="${product.id}">
+                    <label>
+                        <span th:text="${product.name + ' ($)'}">Cookie price ($)</span>
+                        <input type="number" name="price" min="0" max="999999.99" step="0.01"
+                               th:value="${product.price}" required>
+                    </label>
+                    <button type="submit">Save Price</button>
+                </form>
+            </section>
 
         </main>
 
@@ -1121,4 +1210,4 @@
     </script>
 
 </body>
-</html>
+</html>	

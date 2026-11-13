@@ -1,4 +1,3 @@
-
 package ca.sheridancollege.aljanmus;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,6 +15,7 @@ import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
 import ca.sheridancollege.aljanmus.controllers.MainController;
+import ca.sheridancollege.aljanmus.controllers.ProductCatalog;
 
 public class MainControllerTests {
 
@@ -25,13 +25,12 @@ public class MainControllerTests {
     void setUp() {
         InMemoryUserDetailsManager userDetailsManager =
                 new InMemoryUserDetailsManager();
-
-        PasswordEncoder passwordEncoder =
-                new BCryptPasswordEncoder();
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         controller = new MainController(
                 userDetailsManager,
-                passwordEncoder
+                passwordEncoder,
+                new ProductCatalog()
         );
     }
 
@@ -43,7 +42,6 @@ public class MainControllerTests {
     @Test
     void testAdminPage() {
         Model model = new ExtendedModelMap();
-
         assertEquals("admin", controller.admin(model));
     }
 
@@ -55,40 +53,33 @@ public class MainControllerTests {
     @Test
     void testCustomerPage() {
         Model model = new ExtendedModelMap();
-
         String result = controller.customer(model);
-
         assertEquals("customer", result);
     }
 
     @Test
     void testCustomerPromotions() {
         Model model = new ExtendedModelMap();
-
         controller.customer(model);
 
         Object promotions = model.getAttribute("promotions");
 
         assertTrue(promotions instanceof List<?>);
-
         List<?> promotionList = (List<?>) promotions;
 
         assertEquals(3, promotionList.size());
-
         assertTrue(promotionList.contains(
                 Map.of(
                         "title", "20% off Chocolate Chip Cookies",
                         "image", "chocolate.jpeg"
                 )
         ));
-
         assertTrue(promotionList.contains(
                 Map.of(
                         "title", "Buy 12 cookies, get 2 free",
                         "image", "dozen.jpeg"
                 )
         ));
-
         assertTrue(promotionList.contains(
                 Map.of(
                         "title", "Free delivery on orders over $30",

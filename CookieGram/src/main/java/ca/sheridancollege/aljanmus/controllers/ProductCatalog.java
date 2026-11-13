@@ -16,6 +16,7 @@ public class ProductCatalog {
 
     /*
      * The cookies we sell, grouped by base.
+     * Images are in src/main/resources/static/images
      */
     private final List<Product> products = new CopyOnWriteArrayList<>(List.of(
 
@@ -33,7 +34,7 @@ public class ProductCatalog {
             "Sugar Cookie",
             "Soft and buttery, finished with a light sugar sparkle.",
             new BigDecimal("2.25"),
-            null
+            "Sugar Cookie.jpeg"
         ),
 
         new Product(
@@ -41,7 +42,7 @@ public class ProductCatalog {
             "Oatmeal",
             "Chewy oats with brown sugar and a hint of cinnamon.",
             new BigDecimal("2.50"),
-            null
+            "Oatmeal.jpeg"
         ),
 
         new Product(
@@ -49,7 +50,7 @@ public class ProductCatalog {
             "Peanut Butter",
             "Rich peanut butter cookie with the classic fork-press top.",
             new BigDecimal("2.75"),
-            null
+            "Peanut Butter.jpeg"
         ),
 
         // Chocolate base
@@ -58,7 +59,7 @@ public class ProductCatalog {
             "Double Chocolate",
             "Rich chocolate dough with dark chocolate chunks.",
             new BigDecimal("3.00"),
-            null
+            "Double Chocolate.jpeg"
         ),
 
         new Product(
@@ -66,7 +67,7 @@ public class ProductCatalog {
             "Brownie",
             "Crackly on top and fudgy inside, like a brownie in cookie form.",
             new BigDecimal("3.25"),
-            null
+            "Brownie.jpeg"
         ),
 
         new Product(
@@ -74,7 +75,7 @@ public class ProductCatalog {
             "Fudge",
             "Soft chocolate cookie with a gooey fudge centre.",
             new BigDecimal("3.25"),
-            null
+            "Fudge.jpeg"
         ),
 
         new Product(
@@ -82,7 +83,7 @@ public class ProductCatalog {
             "Salted Caramel Chocolate",
             "Chocolate cookie with caramel pieces and a pinch of sea salt.",
             new BigDecimal("3.50"),
-            null
+            "Salted Caramel Chocolate.jpeg"
         ),
 
         // Dietary base
@@ -91,7 +92,7 @@ public class ProductCatalog {
             "Vegan Chocolate Chip",
             "Our chocolate chip cookie made with no eggs or dairy.",
             new BigDecimal("3.25"),
-            null
+            "Vegan Chocolate Chip.jpeg"
         ),
 
         new Product(
@@ -99,7 +100,7 @@ public class ProductCatalog {
             "Vegan Double Chocolate",
             "Rich double chocolate cookie made with no eggs or dairy.",
             new BigDecimal("3.50"),
-            null
+            "Vegan Double Chocolate.jpeg"
         ),
 
         new Product(
@@ -107,7 +108,7 @@ public class ProductCatalog {
             "Gluten-Free Chocolate Chip",
             "Our chocolate chip cookie made with a gluten-free flour blend.",
             new BigDecimal("3.50"),
-            null
+            "Gluten-Free Chocolate Chip.jpeg"
         ),
 
         new Product(
@@ -115,7 +116,7 @@ public class ProductCatalog {
             "Dairy-Free Oatmeal",
             "Chewy oatmeal cookie made without milk or butter.",
             new BigDecimal("3.25"),
-            null
+            "Dairy-Free Oatmeal.jpeg"
         )
     ));
 

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CookieGram | Order Details</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fff5e9;
+            color: #493024;
+        }
+
+        header {
+            background: #8b4513;
+            color: white;
+            padding: 24px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .back-link {
+            background: white;
+            color: #8b4513;
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 24px;
+        }
+
+        h2 {
+            color: #8b4513;
+            margin-top: 0;
+        }
+
+        .details-container {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 6px 18px rgba(73, 48, 36, 0.10);
+        }
+
+        .detail-row {
+            padding: 14px 0;
+            border-bottom: 1px solid #eadfd5;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #69330d;
+        }
+
+        .detail-value {
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .instructions {
+            background: #fff5e9;
+            padding: 18px;
+            border-radius: 8px;
+            margin-top: 25px;
+        }
+
+        .instructions h3 {
+            color: #8b4513;
+            margin-top: 0;
+        }
+
+        .instructions p {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .no-instructions {
+            color: #746258;
+            font-style: italic;
+        }
+
+        .status {
+            display: inline-block;
+            background: #fff0d8;
+            padding: 7px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #746258;
+        }
+
+        @media (max-width: 600px) {
+            .detail-row {
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .detail-value {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+
+        <h1>🍪 CookieGram — Baker Portal</h1>
+
+        <a th:href="@{/employee/orders}" class="back-link">
+            Back to Orders
+        </a>
+
+    </header>
+
+    <main>
+
+        <div class="details-container">
+
+            <h2>Customer Order Details</h2>
+
+            <p>Review the customer's order before preparing it.</p>
+
+            <div class="detail-row">
+                <span class="detail-label">Customer Name</span>
+                <span class="detail-value" th:text="${order.name}">
+                    Customer Name
+                </span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Email Address</span>
+                <span class="detail-value" th:text="${order.email}">
+                    email@example.com
+                </span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Order Type</span>
+                <span class="detail-value" th:text="${order.type}">
+                    Guest
+                </span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Cookies Ordered</span>
+                <span class="detail-value" th:text="${order.items}">
+                    2 × Chocolate Chip
+                </span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Delivery Address</span>
+                <span class="detail-value" th:text="${order.address}">
+                    Delivery Address
+                </span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Order Total</span>
+                <span class="detail-value"
+                      th:text="'$' + ${#numbers.formatDecimal(order.total, 1, 2)}">
+                    $0.00
+                </span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Order Status</span>
+                <span class="detail-value">
+                    <span class="status" th:text="${order.status}">
+                        Pending
+                    </span>
+                </span>
+            </div>
+
+            <!-- Customer special instructions -->
+            <div class="instructions">
+
+                <h3>Special Instructions</h3>
+
+                <p th:if="${order.specialInstructions != null
+                            and !#strings.isEmpty(order.specialInstructions)}"
+                   th:text="${order.specialInstructions}">
+                    Customer instructions
+                </p>
+
+                <p th:unless="${order.specialInstructions != null
+                                and !#strings.isEmpty(order.specialInstructions)}"
+                   class="no-instructions">
+                    No special instructions provided.
+                </p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+        CookieGram Baker Portal
+    </footer>
+
+</body>
+</html>
+
+

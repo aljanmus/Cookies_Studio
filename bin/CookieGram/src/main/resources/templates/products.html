@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookieGram | Our Cookies</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fff5e9;
+            color: #493024;
+        }
+
+        /* Header */
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 7%;
+            background: #8b4513;
+            color: white;
+        }
+
+        .logo {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .header-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-link {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .header-link:hover {
+            text-decoration: underline;
+        }
+
+        .cart-button {
+            display: inline-block;
+            padding: 11px 20px;
+            border-radius: 8px;
+            background: white;
+            color: #8b4513;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .cart-button:hover {
+            background: #f5e5d5;
+        }
+
+        /* Main content */
+
+        main {
+            max-width: 1100px;
+            margin: 40px auto 70px;
+            padding: 0 24px;
+        }
+
+        h2 {
+            margin-bottom: 6px;
+            color: #8b4513;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            margin-top: 0;
+            color: #746258;
+        }
+
+        .message {
+            padding: 12px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .error {
+            background: #fde8e8;
+            color: #9b1c1c;
+        }
+
+        .success {
+            background: #e8f5e9;
+            color: #256029;
+        }
+
+        /* Base (category) links and sections */
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .category-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0 10px;
+        }
+
+        .category-links a {
+            padding: 8px 16px;
+            border: 2px solid #8b4513;
+            border-radius: 999px;
+            color: #8b4513;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .category-links a:hover {
+            background: #f5e5d5;
+        }
+
+        .category {
+            margin-top: 36px;
+            scroll-margin-top: 20px;
+        }
+
+        .category-title {
+            margin: 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eadbce;
+            color: #8b4513;
+            font-size: 24px;
+        }
+
+        /* Product cards */
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(73, 48, 36, 0.12);
+        }
+
+        .product-card img,
+        .no-image {
+            display: block;
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .no-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5e5d5;
+            font-size: 64px;
+        }
+
+        .product-info {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            padding: 18px;
+        }
+
+        .product-info h3 {
+            margin: 0 0 8px;
+            color: #8b4513;
+        }
+
+        .product-info p {
+            flex: 1;
+            margin: 0 0 14px;
+            color: #746258;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .price {
+            margin-bottom: 14px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .add-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .add-form input {
+            width: 70px;
+            padding: 10px;
+            border: 1px solid #c9b6a8;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .add-form button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #8b4513;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .add-form button:hover {
+            background: #69330d;
+        }
+
+        /* Small screens */
+
+        @media (max-width: 700px) {
+            header {
+                padding: 18px 20px;
+            }
+
+            .logo {
+                font-size: 23px;
+            }
+
+            .header-links {
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+
+        <h1 class="logo">
+            <a th:href="@{/}">🍪 CookieGram</a>
+        </h1>
+
+        <div class="header-links">
+
+            <a th:href="@{/}" class="header-link">Home</a>
+
+            <!-- Shows how many cookies are in the cart -->
+            <a th:href="@{/cart}" class="cart-button">
+                🛒 Cart (<span th:text="${cartCount}">0</span>)
+            </a>
+
+        </div>
+
+    </header>
+
+    <main>
+
+        <h2>Our Cookies</h2>
+
+        <p class="subtitle">
+            Pick your favourites and add them to your cart.
+        </p>
+
+        <div th:if="${success}" class="message success" role="status"
+             th:text="${success}"></div>
+
+        <div th:if="${error}" class="message error" role="alert"
+             th:text="${error}"></div>
+
+        <!-- Quick links to each base -->
+        <nav class="category-links" aria-label="Cookie bases">
+            <a th:each="entry : ${productsByCategory}"
+               th:href="'#' + ${#strings.toLowerCase(entry.key)}"
+               th:text="${entry.key} + ' Base'">Classic Base</a>
+        </nav>
+
+        <!-- One section for each base (Classic, Chocolate, Dietary) -->
+        <section class="category"
+                 th:each="entry : ${productsByCategory}"
+                 th:id="${#strings.toLowerCase(entry.key)}">
+
+        <h3 class="category-title" th:text="${entry.key} + ' Base'">Classic Base</h3>
+
+        <div class="product-grid">
+
+            <!-- One card for each cookie in this base -->
+            <div class="product-card" th:each="product : ${entry.value}">
+
+                <img th:if="${product.image != null}"
+                     th:src="@{'/images/' + ${product.image}}"
+                     th:alt="${product.name}">
+
+                <!-- Shown when the product has no image yet -->
+                <div th:unless="${product.image != null}"
+                     class="no-image" aria-hidden="true">🍪</div>
+
+                <div class="product-info">
+
+                    <h3 th:text="${product.name}">Cookie</h3>
+
+                    <p th:text="${product.description}">Description</p>
+
+                    <div class="price"
+                         th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">
+                        $0.00
+                    </div>
+
+                    <!-- th:action adds the CSRF token automatically -->
+                    <form th:action="@{/cart/add}" method="post" class="add-form">
+
+                        <input type="hidden" name="productId"
+                               th:value="${product.id}">
+
+                        <input type="number" name="quantity" value="1"
+                               min="1" max="20" aria-label="Quantity" required>
+
+                        <button type="submit">Add to Cart</button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

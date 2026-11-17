@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookieGram | Guest Checkout</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fff5e9;
+            color: #493024;
+        }
+
+        header {
+            background: #8b4513;
+            color: white;
+            padding: 24px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        header a {
+            background: white;
+            color: #8b4513;
+            padding: 10px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 24px;
+        }
+
+        h2 {
+            color: #8b4513;
+        }
+
+        form {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        label {
+            display: block;
+            margin-top: 16px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #d8c3b0;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 16px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 24px;
+            width: 100%;
+            background: #8b4513;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .error {
+            background: #fde2e2;
+            color: #a12622;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+
+        .note {
+            color: #746258;
+            font-size: 14px;
+        }
+
+        .order-summary {
+            background: white;
+            padding: 18px 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .order-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .total {
+            border-top: 1px solid #ded2c5;
+            padding-top: 10px;
+            font-weight: bold;
+        }
+
+        a {
+            color: #8b4513;
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: #746258;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+
+        <h1>🍪 CookieGram</h1>
+
+        <a th:href="@{/login}">Log In</a>
+
+    </header>
+
+    <main>
+
+        <h2>Guest Checkout</h2>
+
+        <p class="note">
+            No account needed. Just enter your details to place your order.
+        </p>
+
+        <!-- Error message -->
+        <div class="error"
+             th:if="${error}"
+             th:text="${error}">
+        </div>
+
+        <!-- Order summary -->
+        <div class="order-summary">
+
+            <strong>Order Summary</strong>
+
+            <div class="order-row" th:each="item : ${cartItems}">
+
+                <span th:text="${item.product.name} + ' × ' + ${item.quantity}">
+                    Cookie × 1
+                </span>
+
+                <span th:text="'$' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">
+                    $0.00
+                </span>
+
+            </div>
+
+            <div class="order-row total">
+
+                <span>Total</span>
+
+                <span th:text="'$' + ${#numbers.formatDecimal(cartTotal, 1, 2)}">
+                    $0.00
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- Guest checkout form -->
+        <form th:action="@{/guest/checkout}" method="post">
+
+            <label for="name">Full Name</label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                maxlength="100"
+                autocomplete="name"
+                placeholder="Enter your name"
+                required
+            >
+
+            <label for="email">Email</label>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                maxlength="150"
+                autocomplete="email"
+                placeholder="Enter your email"
+                required
+            >
+
+            <label for="address">Delivery Address</label>
+
+            <textarea
+                id="address"
+                name="address"
+                rows="3"
+                maxlength="300"
+                autocomplete="street-address"
+                required
+            ></textarea>
+
+            <label for="specialInstructions">
+                Special Instructions (Optional)
+            </label>
+
+            <textarea
+                id="specialInstructions"
+                name="specialInstructions"
+                rows="4"
+                maxlength="500"
+                placeholder="Enter any special requests for your cookies..."
+            ></textarea>
+
+            <button type="submit">Place Order</button>
+
+        </form>
+
+        <p>
+            <a th:href="@{/cart}">← Back to cart</a> ·
+            Want an account? <a th:href="@{/register}">Create one</a>
+        </p>
+
+    </main>
+
+    <footer>
+        &copy; 2026 CookieGram
+    </footer>
+
+</body>
+</html>
+
+

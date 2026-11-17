@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CookieGram | Baker Orders</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fff5e9;
+            color: #493024;
+        }
+
+        header {
+            background: #8b4513;
+            color: white;
+            padding: 24px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .back-link {
+            color: #8b4513;
+            background: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 1300px;
+            margin: 40px auto;
+            padding: 0 24px;
+        }
+
+        .intro {
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            color: #8b4513;
+        }
+
+        .orders-container {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 6px 18px rgba(73, 48, 36, 0.10);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1150px;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #eadfd5;
+        }
+
+        th {
+            background: #f5e5d5;
+            color: #69330d;
+        }
+
+        tr:hover {
+            background: #fffaf5;
+        }
+
+        .empty-message {
+            padding: 25px;
+            text-align: center;
+            color: #746258;
+        }
+
+        .order-type {
+            display: inline-block;
+            background: #fff0d8;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .status-select {
+            padding: 9px;
+            border: 1px solid #d8bda8;
+            border-radius: 6px;
+            background: white;
+            color: #493024;
+            font-size: 14px;
+        }
+
+        .update-button,
+        .details-button {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 9px 13px;
+            background: #8b4513;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .update-button:hover,
+        .details-button:hover {
+            background: #69330d;
+        }
+
+        .success-message {
+            background: #e5f5e8;
+            color: #276738;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+        }
+
+        .error-message {
+            background: #fde8e5;
+            color: #a12b20;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #746258;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 23px;
+            }
+
+            main {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+
+        <h1>🍪 CookieGram — Baker Portal</h1>
+
+        <a th:href="@{/employee}" class="back-link">
+            Back to Dashboard
+        </a>
+
+    </header>
+
+    <main>
+
+        <section class="intro">
+
+            <h2>Customer Orders</h2>
+
+            <p>
+                View customer orders and update their preparation status.
+            </p>
+
+        </section>
+
+        <!-- Success message -->
+        <div th:if="${success}"
+             class="success-message"
+             th:text="${success}">
+        </div>
+
+        <!-- Error message -->
+        <div th:if="${error}"
+             class="error-message"
+             th:text="${error}">
+        </div>
+
+        <section class="orders-container">
+
+            <!-- Message when there are no orders -->
+            <div th:if="${#lists.isEmpty(orders)}"
+                 class="empty-message">
+
+                <h3>No orders yet</h3>
+
+                <p>New customer orders will appear here.</p>
+
+            </div>
+
+            <!-- Customer orders table -->
+            <table th:unless="${#lists.isEmpty(orders)}">
+
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Order Type</th>
+                        <th>Cookies Ordered</th>
+                        <th>Delivery Address</th>
+                        <th>Total</th>
+                        <th>Order Status</th>
+                        <th>Order Details</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr th:each="order, iterStat : ${orders}">
+
+                        <td th:text="${order.name}">
+                            Customer Name
+                        </td>
+
+                        <td th:text="${order.email}">
+                            email@example.com
+                        </td>
+
+                        <td>
+                            <span class="order-type"
+                                  th:text="${order.type}">
+                                Customer
+                            </span>
+                        </td>
+
+                        <td th:text="${order.items}">
+                            2 × Chocolate Chip
+                        </td>
+
+                        <td th:text="${order.address}">
+                            Delivery Address
+                        </td>
+
+                        <td th:text="'$' + ${#numbers.formatDecimal(order.total, 1, 2)}">
+                            $0.00
+                        </td>
+
+                        <!-- Update order status -->
+                        <td>
+
+                            <form th:action="@{/employee/orders/status}"
+                                  method="post">
+
+                                <input type="hidden"
+                                       name="orderIndex"
+                                       th:value="${iterStat.index}">
+
+                                <select name="status"
+                                        class="status-select">
+
+                                    <option value="Pending"
+                                            th:selected="${order.status == 'Pending'}">
+                                        Pending
+                                    </option>
+
+                                    <option value="Preparing"
+                                            th:selected="${order.status == 'Preparing'}">
+                                        Preparing
+                                    </option>
+
+                                    <option value="Ready"
+                                            th:selected="${order.status == 'Ready'}">
+                                        Ready
+                                    </option>
+
+                                    <option value="Completed"
+                                            th:selected="${order.status == 'Completed'}">
+                                        Completed
+                                    </option>
+
+                                </select>
+
+                                <br>
+
+                                <button type="submit"
+                                        class="update-button">
+                                    Update Status
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                        <!-- View individual order details -->
+                        <td>
+
+                            <a th:href="@{/employee/orders/details(orderIndex=${iterStat.index})}"
+                               class="details-button">
+                                View Details
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+    <footer>
+        CookieGram Baker Portal
+    </footer>
+
+</body>
+</html>
+
+
